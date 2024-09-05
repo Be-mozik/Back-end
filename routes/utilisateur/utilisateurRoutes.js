@@ -4,7 +4,7 @@ const utilisateurController = require("../../controllers/utilisateur/utilisateur
 const router = express.Router();
 
 router.get('/utilisateur/', utilisateurController.getAllUtilisateur);
-router.post('/ajouterutilisateur/', utilisateurController.createUtilisateur);
+router.post('/', utilisateurController.createUtilisateur);
 router.get('/utilisateur/:idUtilisateur', utilisateurController.getUtilisateurById);
 router.delete('/utilisateur/:idUtilisateur', utilisateurController.deleteUtilisateur);
 

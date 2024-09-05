@@ -1,4 +1,5 @@
 const { utilisateur } = require("../../models/utilisateur/utilisateur");
+const bcrypt = require('bcrypt');
 
 class UtilisateurController {
 
@@ -22,7 +23,11 @@ class UtilisateurController {
 
     async createUtilisateur(req,res){
         try {
-            const user = await utilisateur.create(req.body);
+            const hashedmdp = await bcrypt.hash(req.body.mdpUtilisateur,10);
+            const user = await utilisateur.create({
+                ...req.body,
+                mdpUtilisateur: hashedmdp
+            });
             res.status(201).json(user);
         } catch (error) {
             res.status(400).send(error);
