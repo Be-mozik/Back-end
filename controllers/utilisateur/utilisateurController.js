@@ -23,10 +23,10 @@ class UtilisateurController {
 
     async createUtilisateur(req,res){
         try {
-            const hashedmdp = await bcrypt.hash(req.body.mdpUtilisateur,10);
+            const hashedmdp = await bcrypt.hash(req.body.mdputilisateur,10);
             const user = await utilisateur.create({
                 ...req.body,
-                mdpUtilisateur: hashedmdp
+                mdputilisateur: hashedmdp
             });
             res.status(201).json(user);
         } catch (error) {
