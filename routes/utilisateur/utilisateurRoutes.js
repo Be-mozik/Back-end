@@ -3,9 +3,9 @@ const utilisateurController = require("../../controllers/utilisateur/utilisateur
 
 const router = express.Router();
 
-router.get('/utilisateur/', utilisateurController.getAllUtilisateur);
-router.post('/', utilisateurController.createUtilisateur);
-router.get('/utilisateur/:idUtilisateur', utilisateurController.getUtilisateurById);
-router.delete('/utilisateur/:idUtilisateur', utilisateurController.deleteUtilisateur);
+router.get('/', utilisateurController.getAllUtilisateur);
+router.post('/ajouterUtilisateur', utilisateurController.createUtilisateur);
+router.get('/:idUtilisateur', utilisateurController.getUtilisateurById);
+router.delete('/supprimer/:idUtilisateur', utilisateurController.deleteUtilisateur);
 
 module.exports = router;

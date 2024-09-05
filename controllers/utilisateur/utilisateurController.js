@@ -36,10 +36,15 @@ class UtilisateurController {
 
     async deleteUtilisateur(req,res){
         try {
-            const idUser = req.params.idUtilisateur;
-            await utilisateur.destroy({where: { idutilisateur: idUser }});
-            res.status(204).send()
+            const user = await utilisateur.findOne({where: {idutilisateur: req.params.idUtilisateur}});
+            if(user){
+                await utilisateur.destroy(user);
+                res.status(204).send()
+            }else{
+                res.status(404).send("Utilisateur non trouvé");
+            }
         } catch (error) {
+            console.log('Erreur: '+error);
             res.status(400).send(error);
         }
     }

@@ -7,7 +7,7 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(express.json());
-app.use('/api',utilisateur);
+app.use('/api/utilisateur',utilisateur);
 
 connect();
 seque.sync().then(() =>{
