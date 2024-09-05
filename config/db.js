@@ -1,17 +1,17 @@
-const { Sequilize } = require('sequelize');
+const { Sequelize } = require('sequelize');
 
-const seq = new Sequilize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS{
-    host: process.env.DB_HOST,
+const seque = new Sequelize('Mozik', 'Be', '123', {
+    host: 'localhost',
     dialect: 'postgres',
 });
 
 const connect = async () => {
     try {
-        await seq.authenticate();
-        console.log('Connecter sur '+ sequelize.getDatabaseName());
+        await seque.authenticate();
+        console.log('Connecter sur '+ seque.getDatabaseName());
     } catch (error) {
         console.error("Erreur ",error)
     }
 };
 
-module.exports = {seq,connect};
+module.exports = {seque,connect};

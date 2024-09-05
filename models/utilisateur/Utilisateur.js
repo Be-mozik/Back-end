@@ -1,9 +1,9 @@
-const { Sequilize,DataTypes } = require("sequelize");
-const seq = require("../../config/db");
+const { Sequelize, DataTypes } = require("sequelize");
+const {seque} = require('../../config/db');
 
-class Utilisateur{
 
-    constructor(idUtilisateur, prenomUtilisateur, mailUtilisateur, mdpUtilisateur, estSuperUtilisateur,depuisUtilisateur){
+class Utilisateur {
+    constructor(idUtilisateur, prenomUtilisateur, mailUtilisateur, mdpUtilisateur, estSuperUtilisateur, depuisUtilisateur) {
         this.idUtilisateur = idUtilisateur;
         this.prenomUtilisateur = prenomUtilisateur;
         this.mailUtilisateur = mailUtilisateur;
@@ -12,7 +12,7 @@ class Utilisateur{
         this.depuisUtilisateur = depuisUtilisateur;
     }
 
-    getUtilisateur(){
+    getUtilisateur() {
         return `${this.idUtilisateur}
                 ${this.prenomUtilisateur}
                 ${this.mailUtilisateur}
@@ -20,43 +20,40 @@ class Utilisateur{
                 ${this.estSuperUtilisateur}
                 ${this.depuisUtilisateur}`;
     }
-
 }
 
-const utilisateurModel = seq.define('utilisateur',{
-    idUtilisateur: {
+const util = seque.define('utilisateur', {
+    idutilisateur: {
         type: DataTypes.STRING,
         allowNull: false,
-        primayKey: true,
-        defaultValue: seq.literal(`CONCAT('Utilisateur ',nextval('seq_util'))`),
+        primaryKey: true,
+        defaultValue: Sequelize.literal(`CONCAT('Utilisateur ',nextval('seq_util'))`),
     },
-    prenomUtilisateur: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    mailUtilisateur: {
+    prenomutilisateur: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    mdpUtilisateur: {
+    mailutilisateur: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    estSuperUtilisateur: {
+    mdputilisateur: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    estsuperutilisateur: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
     },
-    depuisUtilisateur: {
+    depuisutilisateur: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: seq.literal('CURRENT_DATE'),
+        defaultValue: Sequelize.literal('CURRENT_DATE'),
     },
-},{
+}, {
     tableName: 'utilisateur',
     timestamps: false
 });
 
-module.exports = { Utilisateur,utilisateurModel }
-
-
+module.exports = { Utilisateur, util };
