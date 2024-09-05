@@ -1,7 +1,8 @@
 const { Sequelize } = require('sequelize');
+require('dotenv').config();
 
-const seque = new Sequelize('Mozik', 'Be', '123', {
-    host: 'localhost',
+const seque = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
+    host: process.env.DB_HOST,
     dialect: 'postgres',
 });
 
@@ -14,4 +15,4 @@ const connect = async () => {
     }
 };
 
-module.exports = {seque,connect};
+module.exports = { seque, connect };

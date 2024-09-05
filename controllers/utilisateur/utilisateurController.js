@@ -1,10 +1,10 @@
-const { util } = require("../../models/utilisateur/utilisateur");
+const { utilisateur } = require("../../models/utilisateur/utilisateur");
 
 class UtilisateurController {
 
     async getAllUtilisateur(req,res){
         try {
-            const users = await util.findAll();
+            const users = await utilisateur.findAll();
             res.json(users);
         } catch (error) {
             res.status(500).send(error);
@@ -13,7 +13,7 @@ class UtilisateurController {
 
     async getUtilisateurById(req,res){
         try {
-            const user = await util.findByPk(req.params.idUtilisateur);
+            const user = await utilisateur.findByPk(req.params.idUtilisateur);
             res.json(user);
         } catch (error) {
             res.status(400).send(error);
@@ -22,7 +22,7 @@ class UtilisateurController {
 
     async createUtilisateur(req,res){
         try {
-            const user = await util.create(req.body);
+            const user = await utilisateur.create(req.body);
             res.status(201).json(user);
         } catch (error) {
             res.status(400).send(error);
@@ -32,7 +32,7 @@ class UtilisateurController {
     async deleteUtilisateur(req,res){
         try {
             const idUser = req.params.idUtilisateur;
-            await util.destroy({where: { idutilisateur: idUser }});
+            await utilisateur.destroy({where: { idutilisateur: idUser }});
             res.status(204).send()
         } catch (error) {
             res.status(400).send(error);

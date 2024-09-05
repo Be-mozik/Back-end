@@ -1,8 +1,8 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const {seque} = require('../../config/db');
 
-
 class Utilisateur {
+
     constructor(idUtilisateur, prenomUtilisateur, mailUtilisateur, mdpUtilisateur, estSuperUtilisateur, depuisUtilisateur) {
         this.idUtilisateur = idUtilisateur;
         this.prenomUtilisateur = prenomUtilisateur;
@@ -22,7 +22,7 @@ class Utilisateur {
     }
 }
 
-const util = seque.define('utilisateur', {
+const utilisateur = seque.define('utilisateur', {
     idutilisateur: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -56,4 +56,4 @@ const util = seque.define('utilisateur', {
     timestamps: false
 });
 
-module.exports = { Utilisateur, util };
+module.exports = { Utilisateur, utilisateur };
