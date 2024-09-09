@@ -62,12 +62,16 @@ class UtilisateurController {
                 return res.status(400).json({message: 'Mot de passe incorrect'});
             }
             const JWT_SECRET= process.env.JWT_SECRET
-            const token = jwt.sign({idutilisateur: user.idutilisateur, nomutilisateur: user.nomutilisateur}, JWT_SECRET, {expiresIn: '3h'});
+            const token = jwt.sign({idutilisateur: user.idutilisateur, prenomutilisateur: user.prenomutilisateur}, JWT_SECRET, {expiresIn: '3h'});
             res.status(200).json({token});
         } catch (error) {
             console.log('Error: '+error);
             res.status(400).send(error);
         }
+    }
+
+    async logout(req,res){
+        return res.status(200).json({message: "Déconnexion."});
     }
 }
 

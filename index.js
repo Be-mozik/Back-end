@@ -9,10 +9,10 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.json());
 
 const port = process.env.PORT;
 
-app.use(express.json());
 app.use('/api/utilisateur',utilisateur);
 app.use('/api/demande',demande);
 connect();
