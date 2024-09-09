@@ -3,8 +3,13 @@ require('dotenv').config();
 const {seque,connect} = require("./config/db");
 const utilisateur = require("./routes/utilisateur/utilisateurRoutes");
 const demande = require("./routes/demande/demandeRoutes");
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const app = express();
+app.use(bodyParser.json());
+app.use(cors());
+
 const port = process.env.PORT;
 
 app.use(express.json());

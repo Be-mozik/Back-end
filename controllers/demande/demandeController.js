@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const { demande } = require('../../models/demande/Demande');
+const { utilisateur } =require('../../models/utilisateur/utilisateur');
 
 class DemandeController{
 
@@ -24,9 +25,14 @@ class DemandeController{
 
     async createDemande(req, res) {
         try {
-          const correct = req.body.mdp1 === req.body.mdp2;
+          const { prenomdemande, maildemande, mdp1, mdp2 } = req.body;
+          const user = await utilisateur.findOne({where: {mailutilisateur: maildemande}});
+          if(user){
+            res.status(400).json({message: 'Utilisateur déjà existant.'})
+          }
+          const correct = mdp1 === mdp2;
           if (correct) {
-            const hashed = await bcrypt.hash(req.body.mdp1, 10);
+            const hashed = await bcrypt.hash(mdp1, 10);
             const dem = await demande.create({
               ...req.body,
               mdpdemande: hashed
@@ -72,6 +78,7 @@ class DemandeController{
           res.status(400).send(error);
         }
       }
+      
     
     async deleteDemande(req,res){
         try {

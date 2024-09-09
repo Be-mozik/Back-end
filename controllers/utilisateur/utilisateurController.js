@@ -1,5 +1,6 @@
 const { utilisateur } = require("../../models/utilisateur/utilisateur");
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 class UtilisateurController {
 
@@ -45,6 +46,26 @@ class UtilisateurController {
             }
         } catch (error) {
             console.log('Erreur: '+error);
+            res.status(400).send(error);
+        }
+    }
+
+    async login(req,res){
+        try {
+            const { mail, pass } = req.body;
+            const user = await utilisateur.findOne({ where: {mailutilisateur: mail}});
+            if(!user){
+                return res.status(400).json({message: 'Utilisateur non trouve'});
+            }
+            const correct = await bcrypt.compare(pass,user.mdputilisateur);
+            if(!correct){
+                return res.status(400).json({message: 'Mot de passe incorrect'});
+            }
+            const JWT_SECRET= process.env.JWT_SECRET
+            const token = jwt.sign({idutilisateur: user.idutilisateur, nomutilisateur: user.nomutilisateur}, JWT_SECRET, {expiresIn: '3h'});
+            res.status(200).json({token});
+        } catch (error) {
+            console.log('Error: '+error);
             res.status(400).send(error);
         }
     }
