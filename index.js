@@ -1,10 +1,12 @@
 const express = require("express");
 require('dotenv').config();
 const {seque,connect} = require("./config/db");
-const utilisateur = require("./routes/utilisateur/utilisateurRoutes");
-const demande = require("./routes/demande/demandeRoutes");
 const cors = require('cors');
 const bodyParser = require('body-parser');
+
+const utilisateur = require("./routes/utilisateur/utilisateurRoutes");
+const demande = require("./routes/demande/demandeRoutes");
+const event = require('./routes/event/eventRoutes');
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,6 +17,8 @@ const port = process.env.PORT;
 
 app.use('/api/utilisateur',utilisateur);
 app.use('/api/demande',demande);
+app.use('/api/event',event);
+
 connect();
 seque.sync().then(() =>{
     app.listen(port, ()=>{
