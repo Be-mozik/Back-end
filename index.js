@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const utilisateur = require("./routes/utilisateur/utilisateurRoutes");
 const demande = require("./routes/demande/demandeRoutes");
 const event = require('./routes/event/eventRoutes');
+const info = require('./routes/infoline/infolineRoutes');
 
 const app = express();
 app.use(bodyParser.json());
@@ -18,6 +19,7 @@ const port = process.env.PORT;
 app.use('/api/utilisateur',utilisateur);
 app.use('/api/demande',demande);
 app.use('/api/event',event);
+app.use('/api/info',info);
 
 connect();
 seque.sync().then(() =>{

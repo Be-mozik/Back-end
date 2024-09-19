@@ -9,7 +9,7 @@ class UtilisateurController {
     async getAllUtilisateur(req,res){
         try {
             const users = await utilisateur.findAll();
-            res.json(users);
+            res.status(200).json(users);
         } catch (error) {
             res.status(500).send(error);
         }
@@ -18,7 +18,7 @@ class UtilisateurController {
     async getUtilisateurById(req,res){
         try {
             const user = await utilisateur.findByPk(req.params.idUtilisateur);
-            res.json(user);
+            res.status(200).json(user);
         } catch (error) {
             res.status(400).send(error);
         }
