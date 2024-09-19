@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const { seque } = require('../../config/db');
+const moment = require('moment-timezone');
 
 class Event{
     constructor(idEvenement,idUtilisateur,nomEvenement,dateheureEvenement,lieuEvenement,descriEvenement,imgEvenement){
@@ -45,6 +46,14 @@ const evenement = seque.define('evenement', {
     dateheureevenement: {
         type: DataTypes.DATE,
         allowNull: false,
+        get() {
+            const rawValue = this.getDataValue('dateheureevenement');
+            if (rawValue) {
+                return moment(rawValue).tz('Asia/Baghdad').format('DD-MM-YYYY HH:mm:ss');
+            }
+    
+            return rawValue;
+        }
     },
     lieuevenement: {
         type: DataTypes.STRING,

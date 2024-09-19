@@ -1,8 +1,22 @@
 const { evenement } = require("../../models/event/event");
 const { utilisateur } = require("../../models/utilisateur/utilisateur");
+const moment = require('moment-timezone');
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+    destination: (req,file,cb)=>{
+        cb(null,'uploads/');
+    },
+    filename: (req,file,cb)=>{
+        cb(null,Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({storage: storage});
 
 class EventController{
-    
+
     async getAllEvent(req,res){
         try {
             const events = await evenement.findAll();
@@ -21,27 +35,36 @@ class EventController{
         }
     }
 
-    async createEvent(req,res){
-        try {
-            const { idutilisateur, nomevenement, dateheureevenement, lieuevenement, descrievenement,imgevenement } = req.body;
-            const user = await utilisateur.findByPk(idutilisateur);
-            if(!user){
-                console.log('Erreur: ');
-                return res.status(400).json({message: 'Erreur'});
+    async createEvent(req, res) {
+        upload.single('photo')(req, res, async (err) => {
+            if (err) {
+                console.log(err);
+                return res.status(400).json({ message: 'Error uploading file' });
             }
-            const event = await evenement.create({
-                idutilisateur: idutilisateur,
-                nomevenement: nomevenement,
-                dateheureevenement: dateheureevenement,
-                lieuevenement: lieuevenement,
-                descrievenement: descrievenement,
-                imgevenement: imgevenement
-            });
-            res.status(200).send(event);
-        } catch (error) {
-            res.status(400).send(error);
-        }
+            try {
+                const { idutilisateur, nomevenement, dateheureevenement, lieuevenement, descrievenement } = req.body;
+                const imgevenement = req.file ? req.file.filename : null;
+                const user = await utilisateur.findByPk(idutilisateur);
+                if (!user) {
+                    return res.status(400).json({ message: 'Erreur: Utilisateur non trouvé' });
+                }
+                const dateheure = moment(dateheureevenement).tz('Asia/Baghdad').format('YYYY-MM-DD HH:mm:ss');
+                const event = await evenement.create({
+                    idutilisateur: idutilisateur,
+                    nomevenement: nomevenement,
+                    dateheureevenement: dateheure,
+                    lieuevenement: lieuevenement,
+                    descrievenement: descrievenement,
+                    imgevenement: imgevenement
+                });
+                res.status(200).json(event);
+            } catch (error) {
+                console.error(error);
+                res.status(500).json({ message: 'Une erreur est survenue lors de la création de l\'événement' });
+            }
+        });
     }
+
 
     async updateEvent(req,res){
         try {
