@@ -5,9 +5,9 @@ const router = express.Router();
 
 router.get('/',billetController.getAllBillet);
 router.get('/:idbillet',billetController.getBilletById);
-router.get('/event/:idevenement',billetController.getBilletByEvent);
+router.get('/event/:idevenement',billetController.getBilletByEventPostMan);
 router.delete('/supprimer/:idbillet',billetController.deleteBillet);
-router.put('/modifier',billetController.updateBillet);
+router.put('/modifier',billetController.updateBilletPostMan);
 router.post('/creerBillet',billetController.createBillet);
 
 module.exports = router;

@@ -51,7 +51,6 @@ const evenement = seque.define('evenement', {
             if (rawValue) {
                 return moment(rawValue).tz('Asia/Baghdad').format('DD-MM-YYYY HH:mm:ss');
             }
-    
             return rawValue;
         }
     },

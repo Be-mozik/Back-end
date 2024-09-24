@@ -1,5 +1,7 @@
 const { evenement } = require("../../models/event/event");
 const { utilisateur } = require("../../models/utilisateur/utilisateur");
+const billet = require("../../controllers/billet/billetController");
+const info = require("../../controllers/infoline/infolineController");
 const moment = require('moment-timezone');
 const multer = require('multer');
 const path = require('path');
@@ -42,7 +44,7 @@ class EventController{
                 return res.status(400).json({ message: 'Error uploading file' });
             }
             try {
-                const { idutilisateur, nomevenement, dateheureevenement, lieuevenement, descrievenement } = req.body;
+                const { idutilisateur, nomevenement, dateheureevenement, lieuevenement, descrievenement, b, i } = req.body;
                 const imgevenement = req.file ? req.file.filename : null;
                 const user = await utilisateur.findByPk(idutilisateur);
                 if (!user) {
@@ -57,6 +59,14 @@ class EventController{
                     descrievenement: descrievenement,
                     imgevenement: imgevenement
                 });
+                const billets = typeof b === 'string' ? JSON.parse(b) : b;
+                const infos = typeof i === 'string' ? JSON.parse(i) : i;
+                for( const billetData of billets){
+                    await billet.createBillet(event.idevenement,billetData.nombillet,billetData.tarifbillet);
+                }
+                for( const infoData of infos ){
+                    await info.createInfo(event.idevenement,infoData.numeroinfo,infoData.nominfo);
+                }
                 res.status(200).json(event);
             } catch (error) {
                 console.error(error);
@@ -67,11 +77,17 @@ class EventController{
 
 
     async updateEvent(req,res){
+        upload.single('photo')(req, res, async (err) => {
+            if (err) {
+                console.log(err);
+                return res.status(400).json({ message: 'Error uploading file' });
+            }
         try {
-            const { idevenement,nomevenement,dateheureevenement,lieuevenement,descievenement,imgevenement } = req.body;
+            const { idevenement,nomevenement,dateheureevenement,lieuevenement,descievenement,b,i } = req.body;
+            const imgevenement = req.file ? req.file.filename : null;
             const event = await evenement.findByPk(idevenement);
             if(!event){
-                return res.status(400).send({message: 'Evenement inconnu'})
+                return res.status(400).send({message: 'Evenement inconnu.'});
             }
             await event.update({
                 nomevenement: nomevenement,
@@ -80,11 +96,21 @@ class EventController{
                 descievenement: descievenement,
                 imgevenement: imgevenement
             });
+            const billets = typeof b === 'string' ? JSON.parse(b) : b;
+            const infos = typeof i === 'string' ? JSON.parse(i) : i;
+            for(const dataBillet of billets ){
+                await billet.updateBillet(dataBillet.idbillet, dataBillet.nombillet,dataBillet.tarifbillet);
+            }
+            for(const dataInfo of infos){
+                await info.updateInfo(dataInfo.idinfo,dataInfo.numeroinfo,dataInfo.nominfo);
+            }
             res.status(200).send({success: `Evenement ${event.nomevenement} modifié.`});
         } catch (error) {
             res.status(500).send({message: 'Erreur lors de la mise à jour de l\'événement'});
         }
+        });
     }
+    
 
     async deleteEvenement(req,res){
         try {

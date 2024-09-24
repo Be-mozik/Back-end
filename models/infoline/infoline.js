@@ -34,6 +34,10 @@ const infoline = seque.define('infoline',{
     numeroinfo: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    nominfo: {
+        type: DataTypes.STRING,
+        allowNull: false,
     }
 },{
     tableName: "infoevenement",

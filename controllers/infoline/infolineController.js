@@ -45,15 +45,16 @@ class InfolineController{
         }
     }
 
-    async updateInfo(req,res){
+    async updateInfoPostMan(req,res){
         try {
-            const { idinfo, numeroinfo }= req.body;
+            const { idinfo, numeroinfo,nominfo }= req.body;
             const info = await infoline.findByPk(idinfo);
             if(!info){
                 return res.status(400).send({message: "Info inconnue."});
             }
             await info.update({
-                numeroinfo: numeroinfo
+                numeroinfo: numeroinfo,
+                nominfo: nominfo
             });
             res.status(200).send("mety");
         } catch (error) {
@@ -61,16 +62,32 @@ class InfolineController{
         }
     }
 
-    async createInfo(req,res){
+    async updateInfo(idinfo, numeroinfo,nominfo){
         try {
-            const { idevenement,numeroinfo } = req.body;
+            const info = await infoline.findByPk(idinfo);
+            if(!info){
+                return res.status(400).send({message: "Info inconnue."});
+            }
+            await info.update({
+                numeroinfo: numeroinfo,
+                nominfo: nominfo
+            });
+        return info;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async createInfo(idevenement,numeroinfo,nominfo){
+        try {
             const info = await infoline.create({
                 idevenement: idevenement,
-                numeroinfo: numeroinfo
+                numeroinfo: numeroinfo,
+                nominfo: nominfo
             });
-            res.status(200).json(info);
+            return info;
         } catch (error) {
-            res.status(500).send(error);
+            console.log(error);
         }
     }
 

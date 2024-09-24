@@ -19,14 +19,25 @@ class BilletController{
         }
     }
 
-    async getBilletByEvent(req,res){
+    async getBilletByEventPostMan(req,res){
         try {
-            const bt = await billet.findOne({where: {
+            const bt = await billet.findAll({where: {
                 idevenement: req.params.idevenement
             }});
             res.status(200).json(bt);
         } catch (error) {
             res.status(400).send(error);
+        }
+    }
+
+    async getBilletByEvent(idevenement){
+        try {
+            const bt = await billet.findOne({where: {
+                idevenement: idevenement
+            }});
+            return bt;
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -45,7 +56,7 @@ class BilletController{
         }
     }
 
-    async updateBillet(req,res){
+    async updateBilletPostMan(req,res){
         try {
             const { idbillet, nombillet, tarifbillet } = req.body;
             const bt = await billet.findByPk(idbillet);
@@ -62,17 +73,32 @@ class BilletController{
         }
     }
 
-    async createBillet(req,res){
+    async updateBillet(idbillet, nombillet, tarifbillet){
         try {
-            const { idevenement, nombillet, tarifbillet } = req.body;
+            const bt = await billet.findByPk(idbillet);
+            if(!bt){
+                return res.status(400).send({messge: "Billet inconnu."});
+            }
+            await bt.update({
+                nombillet: nombillet,
+                tarifbillet: tarifbillet
+            });
+            return bt;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async createBillet(idevenement, nombillet, tarifbillet){
+        try {
             const bt = await billet.create({
                 idevenement: idevenement,
                 nombillet: nombillet,
                 tarifbillet: tarifbillet
             });
-            res.status(200).send("mety");
+            return bt;
         } catch (error) {
-            res.status(500).send(error);
+            console.log(error);
         }
     }
 }
