@@ -55,6 +55,7 @@ create table billetEvenement(
     idBillet VARCHAR PRIMARY key,
     nomBillet VARCHAR(255),
     tarifBillet NUMERIC(9,2),
+    nombreBillet INTEGER,
     Foreign Key (idEvenement) REFERENCES evenement(idEvenement)
 );
 

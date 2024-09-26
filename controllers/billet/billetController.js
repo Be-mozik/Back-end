@@ -58,14 +58,15 @@ class BilletController{
 
     async updateBilletPostMan(req,res){
         try {
-            const { idbillet, nombillet, tarifbillet } = req.body;
+            const { idbillet, nombillet, tarifbillet, nombrebillet } = req.body;
             const bt = await billet.findByPk(idbillet);
             if(!bt){
                 return res.status(400).send({messge: "Billet inconnu."});
             }
             await bt.update({
                 nombillet: nombillet,
-                tarifbillet: tarifbillet
+                tarifbillet: tarifbillet,
+                nombrebillet: nombrebillet
             });
             res.status(200).send("mety");
         } catch (error) {
@@ -73,7 +74,7 @@ class BilletController{
         }
     }
 
-    async updateBillet(idbillet, nombillet, tarifbillet){
+    async updateBillet(idbillet, nombillet, tarifbillet,nombrebillet){
         try {
             const bt = await billet.findByPk(idbillet);
             if(!bt){
@@ -81,7 +82,8 @@ class BilletController{
             }
             await bt.update({
                 nombillet: nombillet,
-                tarifbillet: tarifbillet
+                tarifbillet: tarifbillet,
+                nombrebillet: nombrebillet
             });
             return bt;
         } catch (error) {
@@ -89,12 +91,13 @@ class BilletController{
         }
     }
 
-    async createBillet(idevenement, nombillet, tarifbillet){
+    async createBillet(idevenement, nombillet, tarifbillet,nombrebillet){
         try {
             const bt = await billet.create({
                 idevenement: idevenement,
                 nombillet: nombillet,
-                tarifbillet: tarifbillet
+                tarifbillet: tarifbillet,
+                nombrebillet: nombrebillet
             });
             return bt;
         } catch (error) {

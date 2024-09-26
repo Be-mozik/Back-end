@@ -39,9 +39,13 @@ const billet = seque.define('billetEvenement',{
     tarifbillet: {
         type: DataTypes.NUMERIC(9,2),
         allowNull: false,
+    },
+    nombrebillet: {
+        type: DataTypes.INTEGER,
+        allowNull: false        
     }
 },{
-    tableName: "billetEvenement",
+    tableName: "billetevenement",
     timestamps: false
 });
 
