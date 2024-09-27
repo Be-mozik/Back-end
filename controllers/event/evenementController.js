@@ -126,6 +126,21 @@ class EventController{
             res.status(400).send(error);
         }
     }
+
+    async annulerEvent(req,res){
+        try {
+            const event = await evenement.findByPk(req.params.idEvent);
+            if(!event){
+                return res.status(400).send({message: "Evenement inconnu."});
+            }
+            await event.update({
+                estvalide: false
+            });
+            res.status(200).send({success: 'Evenement annulé'})
+        } catch (error) {
+            res.status(400).send(error);
+        }
+    }
 }
 
 module.exports = new EventController();

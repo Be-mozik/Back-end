@@ -65,6 +65,11 @@ const evenement = seque.define('evenement', {
     imgevenement: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    estvalide: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
     }
 },{
     tableName: 'evenement',

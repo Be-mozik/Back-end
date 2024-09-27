@@ -46,6 +46,8 @@ create table evenement(
     Foreign Key (idUtilisateur) REFERENCES utilisateur(idUtilisateur)    
 );
 
+alter table evenement ADD COLUMN estValide BOOLEAN DEFAULT true;
+
 create SEQUENCE seq_billet
 INCREMENT by 1
 start with 1;
@@ -69,3 +71,11 @@ create table infoEvenement(
     numeroInfo VARCHAR,
     Foreign Key (idEvenement) REFERENCES evenement(idEvenement)
 );
+
+ALTER TABLE infoEvenement ADD COLUMN nomInfo VARCHAR(255);
+
+SHOW timezone;
+ALTER TABLE evenement ALTER COLUMN dateheureevenement TYPE TIMESTAMP WITH TIME ZONE;
+
+
+
