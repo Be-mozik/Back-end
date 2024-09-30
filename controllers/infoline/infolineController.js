@@ -45,6 +45,17 @@ class InfolineController{
         }
     }
 
+    async deleteInfoByEvent(idEvent){
+        try {
+            await infoline.destroy({
+                where: {idevenement: idEvent}
+            });
+            return { success: true, message: "Information supprimée avec succès." };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+
     async updateInfoPostMan(req,res){
         try {
             const { idinfo, numeroinfo,nominfo }= req.body;

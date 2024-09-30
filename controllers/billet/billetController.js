@@ -56,6 +56,17 @@ class BilletController{
         }
     }
 
+    async deleteBilletByEvent(idEvent){
+        try {
+            await billet.destroy({
+                where: {idevenement: idEvent}
+            });
+            return { success: true, message: "Information supprimée avec succès." };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+
     async updateBilletPostMan(req,res){
         try {
             const { idbillet, nombillet, tarifbillet, nombrebillet } = req.body;

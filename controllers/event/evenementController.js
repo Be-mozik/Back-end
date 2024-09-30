@@ -83,7 +83,7 @@ class EventController{
                 return res.status(400).json({ message: 'Error uploading file' });
             }
         try {
-            const { idevenement,nomevenement,dateheureevenement,lieuevenement,descievenement,b,i } = req.body;
+            const { idevenement,nomevenement,dateheureevenement,lieuevenement,descrievenement,b,i } = req.body;
             const imgevenement = req.file ? req.file.filename : null;
             const event = await evenement.findByPk(idevenement);
             if(!event){
@@ -93,20 +93,22 @@ class EventController{
                 nomevenement: nomevenement,
                 dateheureevenement: dateheureevenement,
                 lieuevenement: lieuevenement,
-                descievenement: descievenement,
+                descrievenement: descrievenement,
                 imgevenement: imgevenement
             });
+            await billet.deleteBilletByEvent(idevenement);
+            await info.deleteInfoByEvent(idevenement);
             const billets = typeof b === 'string' ? JSON.parse(b) : b;
             const infos = typeof i === 'string' ? JSON.parse(i) : i;
-            for(const dataBillet of billets ){
-                await billet.updateBillet(dataBillet.idbillet, dataBillet.nombillet,dataBillet.tarifbillet);
+            for( const billetData of billets){
+                await billet.createBillet(event.idevenement,billetData.nombillet,billetData.tarifbillet,billetData.nombrebillet);
             }
-            for(const dataInfo of infos){
-                await info.updateInfo(dataInfo.idinfo,dataInfo.numeroinfo,dataInfo.nominfo);
+            for( const infoData of infos ){
+                await info.createInfo(event.idevenement,infoData.numeroinfo,infoData.nominfo);
             }
             res.status(200).send({success: `Evenement ${event.nomevenement} modifié.`});
         } catch (error) {
-            res.status(500).send({message: 'Erreur lors de la mise à jour de l\'événement'});
+            res.status(500).send({message: 'Erreur lors de la mise à jour de l\'événement: ',error});
         }
         });
     }
