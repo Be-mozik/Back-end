@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
-const { demande } = require('../../models/demande/Demande');
+const { demande } = require('../../models/demande/demande');
 const { utilisateur } =require('../../models/utilisateur/utilisateur');
 
 class DemandeController{

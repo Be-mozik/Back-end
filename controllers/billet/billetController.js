@@ -115,6 +115,30 @@ class BilletController{
             console.log(error);
         }
     }
+
+    async checkBillet(idbillet, nombre) {
+        try {
+            const b = await billet.findByPk(idbillet);
+            if (!b) {
+                return false;
+            }
+            const venteDeCeBillet = 15; // Alaina anaty Base
+            const disponible = b.nombrebillet - venteDeCeBillet;
+            return nombre <= disponible;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async calculMontant(idbillet,nombre){
+        try {
+            const b = await billet.findByPk(idbillet);
+            const montant = b.tarifbillet * nombre;
+            return montant;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = new BilletController();

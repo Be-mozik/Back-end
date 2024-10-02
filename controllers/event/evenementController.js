@@ -143,6 +143,17 @@ class EventController{
             res.status(400).send(error);
         }
     }
+
+    async checkEvent(idevent) {
+        try {
+            const event = await evenement.findByPk(idevent);
+            const eventDate = event.dateheureevenement.replace(' ', 'T');
+            const avenir = Date.now() < new Date(eventDate).getTime();
+            return new Date(event.dateheureevenement);
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = new EventController();

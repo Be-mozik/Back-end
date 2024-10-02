@@ -1,8 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const { seque } = require('../../config/db');
 
-class Demande{
-
+class Demande {
     constructor(idDemande,prenomDemande,mailDemande,mdpDemande,dateDemande){
         this.idDemande = idDemande;
         this.prenomDemande = prenomDemande;
