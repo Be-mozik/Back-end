@@ -1,7 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const { seque } = require('../../config/db');
 const { v4: uuidv4 } = require('uuid');
-const moment = require('moment-timezone');
 
 const historique = seque.define('historiqueachat',{
     tokenachat: {
@@ -45,14 +44,11 @@ const historique = seque.define('historiqueachat',{
     datetransaction: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        get() {
-            const rawValue = this.getDataValue('datetransaction');
-            if (rawValue) {
-                return moment(rawValue).tz('Asia/Baghdad').format('DD-MM-YYYY HH:mm:ss');
-            }
-            return rawValue;
-        },
+    },
+    estvalide: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
     }
 },{
     tableName: 'historiqueachat',

@@ -37,6 +37,15 @@ class EventController{
         }
     }
 
+    async getDetailEvent(idevent){
+        try {
+            const event = await evenement.findByPk(idevent);
+            return event;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async createEvent(req, res) {
         upload.single('photo')(req, res, async (err) => {
             if (err) {
@@ -50,7 +59,7 @@ class EventController{
                 if (!user) {
                     return res.status(400).json({ message: 'Erreur: Utilisateur non trouvé' });
                 }
-                const dateheure = moment(dateheureevenement).tz('Asia/Baghdad').format('YYYY-MM-DD HH:mm:ss');
+                const dateheure = moment(dateheureevenement).tz('Asia/Baghdad').format('DD-MM-YYYY HH:mm:ss');
                 const event = await evenement.create({
                     idutilisateur: idutilisateur,
                     nomevenement: nomevenement,
@@ -147,9 +156,11 @@ class EventController{
     async checkEvent(idevent) {
         try {
             const event = await evenement.findByPk(idevent);
-            const eventDate = event.dateheureevenement.replace(' ', 'T');
+            const [day, month, year] = event.dateheureevenement.split(' ')[0].split('-');
+            const time = event.dateheureevenement.split(' ')[1];
+            const eventDate = `${year}-${month}-${day}T${time}`;
             const avenir = Date.now() < new Date(eventDate).getTime();
-            return new Date(event.dateheureevenement);
+            return event && avenir && event.estvalide;
         } catch (error) {
             throw error;
         }

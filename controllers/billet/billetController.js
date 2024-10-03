@@ -1,4 +1,6 @@
+const { where } = require("sequelize");
 const { billet } = require("../../models/billet/billet");
+const historique = require("../../models/historique/historique");
 
 class BilletController{
     async getAllBillet(req,res){
@@ -122,7 +124,7 @@ class BilletController{
             if (!b) {
                 return false;
             }
-            const venteDeCeBillet = 15; // Alaina anaty Base
+            const venteDeCeBillet = await historique.sum('nombre', {where:{idbillet: idbillet}});
             const disponible = b.nombrebillet - venteDeCeBillet;
             return nombre <= disponible;
         } catch (error) {
