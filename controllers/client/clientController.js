@@ -14,7 +14,7 @@ class ClientsController {
 
     async createClientFormulaire(req,res){
         try {
-            const { nomclient, prenomclient,mailclient,mdp1,mdp2 } = req.body;
+            const { nomclient, prenomclient,mailclient,mdp1,mdp2,dateclient } = req.body;
             const correct = mdp1 === mdp2;
             if(!correct){
                 return res.status(500).send({message: "Les mots de passe ne correspondent pas."});
@@ -25,6 +25,7 @@ class ClientsController {
                 prenomclient,
                 mailclient,
                 mdpclient: hashed,
+                dateclient: dateclient,
             });
             res.status(200).send("Client enregistré: "+clt);
         } catch (error) {
@@ -48,7 +49,7 @@ class ClientsController {
 
     async getClientById(req,res){
         try {
-            const client = clients.findByPk(req.params.idclient);
+            const client = await clients.findByPk(req.params.idclient);
             if(!client){
                 return res.status(400).send({message: "Client inconnu."});
             }

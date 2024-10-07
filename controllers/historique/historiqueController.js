@@ -1,4 +1,4 @@
-const historique = require("../../models/historique/historique");
+const { historique, achatSummary } = require("../../models/historique/historique");
 const event = require('../event/evenementController');
 const billet = require('../billet/billetController');
 const ct = require('../../models/clients/clients');
@@ -7,13 +7,13 @@ const QRCode = require('qrcode');
 const path = require('path');
 const sharp = require('sharp');
 const { PDFDocument } = require('pdf-lib');
-const fs = require('fs'); // Assurez-vous que cette ligne est présente
+const fs = require('fs');
 
 class HistoriqueController {
 
     async createHistorique(req, res) {
         try {
-            const { idclient, idevenement, idbillet, nombre } = req.body;
+            const { idclient, idevenement, idbillet, nombre,datetransaction } = req.body;
             const client = await ct.findByPk(idclient);
             if (!client) {
                 return res.status(400).send({ message: "Client introuvable." });
@@ -35,7 +35,7 @@ class HistoriqueController {
                 idbillet,
                 nombre,
                 montant,
-                datetransaction: dateheure
+                datetransaction: datetransaction
             });
             const qrBuffer = await QRCode.toBuffer(histo.tokenachat, {
                 errorCorrectionLevel: 'H',
@@ -86,6 +86,17 @@ class HistoriqueController {
         } catch (error) {
             console.error(error);
             res.status(500).send("Erreur: " + error.message);
+        }
+    }
+
+    async getAchatByClient(req,res){
+        try {
+            const achat = await historique.findAll({
+                where: {idclient: req.params.idclient}
+            });
+            res.status(200).json(achat);
+        } catch (error) {
+            res.status(400).send(error);
         }
     }
 }

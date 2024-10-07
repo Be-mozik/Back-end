@@ -1,8 +1,8 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const  DataTypes  = require('sequelize');
 const { seque } = require('../../config/db');
 const { v4: uuidv4 } = require('uuid');
 
-const historique = seque.define('historiqueachat',{
+const historique = seque.define('achat',{
     tokenachat: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -51,8 +51,9 @@ const historique = seque.define('historiqueachat',{
         defaultValue: true,
     }
 },{
-    tableName: 'historiqueachat',
-    timestamps: false
+    tableName: 'achat',
+    timestamps: false,
 });
+
 
 module.exports = historique;

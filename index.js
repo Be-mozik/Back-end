@@ -12,6 +12,10 @@ const info = require('./routes/infoline/infolineRoutes');
 const billet = require('./routes/billet/billetRoutes');
 const client = require('./routes/clients/clientsRoutes');
 const historique = require('./routes/historique/historiqueRoutes');
+const clientS = require('./routes/clients/clientSummaryRoutes');
+const caS = require("./routes/historique/caSummaryRoutes");
+const eventS = require("./routes/event/eventSummaryRoutes");
+const achatS = require("./routes/historique/achatSummaryRoutes");
 
 const app = express();
 app.use(bodyParser.json());
@@ -28,6 +32,10 @@ app.use('/api/info',info);
 app.use('/api/billet',billet);
 app.use('/api/client',client);
 app.use('/api/historique',historique);
+app.use('/api/clientS',clientS);
+app.use('/api/ca',caS);
+app.use('/api/eventS',eventS);
+app.use('/api/achatS',achatS);
 
 connect();
 seque.sync().then(() =>{

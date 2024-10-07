@@ -59,7 +59,7 @@ class EventController{
                 if (!user) {
                     return res.status(400).json({ message: 'Erreur: Utilisateur non trouvé' });
                 }
-                const dateheure = moment(dateheureevenement).tz('Asia/Baghdad').format('DD-MM-YYYY HH:mm:ss');
+                const dateheure = moment(dateheureevenement).tz('Asia/Baghdad').format('YYYY-MM-DD HH:mm:ss');
                 const event = await evenement.create({
                     idutilisateur: idutilisateur,
                     nomevenement: nomevenement,
