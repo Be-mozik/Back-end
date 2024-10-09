@@ -1,4 +1,4 @@
-const { historique, achatSummary } = require("../../models/historique/historique");
+const historique = require("../../models/historique/historique");
 const event = require('../event/evenementController');
 const billet = require('../billet/billetController');
 const ct = require('../../models/clients/clients');

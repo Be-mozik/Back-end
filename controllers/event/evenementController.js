@@ -21,7 +21,7 @@ class EventController{
 
     async getAllEvent(req,res){
         try {
-            const events = await evenement.findAll();
+            const events = await evenement.findAll({ order: [['dateheureevenement', 'DESC']] });
             res.json(events);
         } catch (error) {
             res.status(500).send(error);

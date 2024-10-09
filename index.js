@@ -31,7 +31,7 @@ app.use('/api/event',event);
 app.use('/api/info',info);
 app.use('/api/billet',billet);
 app.use('/api/client',client);
-app.use('/api/historique',historique);
+app.use('/api/achat',historique);
 app.use('/api/clientS',clientS);
 app.use('/api/ca',caS);
 app.use('/api/eventS',eventS);

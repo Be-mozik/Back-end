@@ -57,11 +57,11 @@ class UtilisateurController {
             const { mail, pass } = req.body;
             const user = await utilisateur.findOne({ where: {mailutilisateur: mail}});
             if(!user){
-                return res.status(400).json({message: 'Utilisateur non trouve'});
+                return res.json({message: 'Utilisateur non trouve'});
             }
             const correct = await bcrypt.compare(pass,user.mdputilisateur);
             if(!correct){
-                return res.status(400).json({message: 'Mot de passe incorrect'});
+                return res.json({message: 'Mot de passe incorrect'});
             }
             const JWT_SECRET= process.env.JWT_SECRET
             const token = jwt.sign({idutilisateur: user.idutilisateur, prenomutilisateur: user.prenomutilisateur, statususer: user.estsuperutilisateur}, JWT_SECRET, {expiresIn: '3h'});
