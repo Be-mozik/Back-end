@@ -7,5 +7,4 @@ router.get('/',aS.getAchatSummary);
 router.get('/get/Years',aS.getYears);
 router.get('/:year',aS.getAchatSummaryGraph1);
 
-
 module.exports = router;
