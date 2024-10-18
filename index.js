@@ -4,6 +4,7 @@ const {seque,connect} = require("./config/db");
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
+const { checkEvent } = require('./services/checkEvent');
 
 const utilisateur = require("./routes/utilisateur/utilisateurRoutes");
 const demande = require("./routes/demande/demandeRoutes");
@@ -45,3 +46,5 @@ seque.sync().then(() =>{
 }).catch((error)=>{
     console.log('Erreur lors du demarage: ',error);
 });
+
+checkEvent();
