@@ -47,11 +47,12 @@ class HistoriqueController {
                 return res.status(500).send({ error: "Image non trouvée." });
             }
             const blurredImage = await sharp(uploadsDir)
-                .blur(5)
+                .blur(10)
+                .modulate({ brightness: 0.8, saturation: 0.8 })
                 .toBuffer();
-
+                
             const pdfDoc = await PDFDocument.create();
-            const page = pdfDoc.addPage([600, 400]);
+            const page = pdfDoc.addPage([500,600]);
 
             const backgroundImage = await pdfDoc.embedJpg(blurredImage);
             const { width, height } = page.getSize();
@@ -64,7 +65,7 @@ class HistoriqueController {
             });
 
             const qrImage = await pdfDoc.embedPng(qrBuffer);
-            const qrSize = 100;
+            const qrSize = 200;
             const qrX = (width - qrSize) / 2; 
             const qrY = (height - qrSize) / 2;
 
@@ -76,13 +77,10 @@ class HistoriqueController {
             });
 
             const pdfBytes = await pdfDoc.save();
-            console.log(`PDF generated with size: ${pdfBytes.length} bytes`);
-
             res.setHeader('Content-Disposition', `attachment; filename="${eve.nomevenement}.pdf"`);
             res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Length', pdfBytes.length);
-
-            res.send(pdfBytes);
+            res.setHeader('Content-Length', Buffer.byteLength(pdfBytes));
+            res.end(pdfBytes);
         } catch (error) {
             console.error(error);
             res.status(500).send("Erreur: " + error.message);
