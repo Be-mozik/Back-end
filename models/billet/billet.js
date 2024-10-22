@@ -40,6 +40,14 @@ const billet = seque.define('billetEvenement',{
         type: DataTypes.NUMERIC(9,2),
         allowNull: false,
     },
+    iddevis: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'devis',
+            key: 'iddevis'
+        },
+        allowNull: false,
+    },
     nombrebillet: {
         type: DataTypes.INTEGER,
         allowNull: false        

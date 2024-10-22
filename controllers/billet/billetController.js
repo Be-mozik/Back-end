@@ -1,6 +1,8 @@
 const { where } = require("sequelize");
 const { billet } = require("../../models/billet/billet");
 const historique = require("../../models/historique/historique");
+require('dotenv').config();
+const axios = require('axios');
 
 class BilletController{
     async getAllBillet(req,res){
@@ -104,12 +106,13 @@ class BilletController{
         }
     }
 
-    async createBillet(idevenement, nombillet, tarifbillet,nombrebillet){
+    async createBillet(idevenement, nombillet, tarifbillet,iddevis,nombrebillet){
         try {
             const bt = await billet.create({
                 idevenement: idevenement,
                 nombillet: nombillet,
                 tarifbillet: tarifbillet,
+                iddevis: iddevis,
                 nombrebillet: nombrebillet
             });
             return bt;
@@ -134,8 +137,21 @@ class BilletController{
 
     async calculMontant(idbillet,nombre){
         try {
+            const devis = process.env.DEVIS_KEY;
+            const urlUS = `https://v6.exchangerate-api.com/v6/${devis}/latest/USD`;
+            const urlEUR = `https://v6.exchangerate-api.com/v6/${devis}/latest/EUR`;
             const b = await billet.findByPk(idbillet);
-            const montant = b.tarifbillet * nombre;
+            let montant = 0;
+
+            if(b.iddevis == 1){
+                const eur = await axios.get(urlEUR);
+                montant = (nombre * b.tarifbillet) * eur.data.conversion_rates.MGA ;
+            }else if(b.iddevis ==2){
+                const us = await axios.get(urlUS);
+                montant = (nombre * b.tarifbillet) *us.data.conversion_rates.MGA;
+            }else{
+                montant = nombre * b.tarifbillet;
+            }
             return montant;
         } catch (error) {
             throw error;

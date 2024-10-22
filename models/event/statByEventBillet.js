@@ -15,6 +15,9 @@ const v_billet_stat_event = seque.define('v_billet_achat_event',{
     tarifbillet: {
         type: DataTypes.FLOAT,
     },
+    nomdevis: {
+        type: DataTypes.STRING,
+    },
     nombrebillet: {
         type: DataTypes.INTEGER,
     },

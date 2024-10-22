@@ -71,7 +71,7 @@ class EventController{
                 const billets = typeof b === 'string' ? JSON.parse(b) : b;
                 const infos = typeof i === 'string' ? JSON.parse(i) : i;
                 for( const billetData of billets){
-                    await billet.createBillet(event.idevenement,billetData.nombillet,billetData.tarifbillet,billetData.nombrebillet);
+                    await billet.createBillet(event.idevenement,billetData.nombillet,billetData.tarifbillet,billetData.devis,billetData.nombrebillet);
                 }
                 for( const infoData of infos ){
                     await info.createInfo(event.idevenement,infoData.numeroinfo,infoData.nominfo);

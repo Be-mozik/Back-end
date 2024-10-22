@@ -5,7 +5,6 @@ const ct = require('../../models/clients/clients');
 const moment = require('moment-timezone');
 const QRCode = require('qrcode');
 const path = require('path');
-const sharp = require('sharp');
 const { PDFDocument } = require('pdf-lib');
 const fs = require('fs');
 
@@ -42,19 +41,19 @@ class HistoriqueController {
                 margin: 1,
             });
 
-            const uploadsDir = path.join(__dirname, '..', '..', 'uploads', eve.imgevenement);
+            const uploadsDir = path.join(__dirname, '..', '..', 'assets', 'ticket.jpeg');
+            console.log(uploadsDir);
             if (!fs.existsSync(uploadsDir)) {
                 return res.status(500).send({ error: "Image non trouvée." });
             }
-            const blurredImage = await sharp(uploadsDir)
-                .blur(10)
-                .modulate({ brightness: 0.8, saturation: 0.8 })
-                .toBuffer();
+            
+            const imageBuffer = fs.readFileSync(uploadsDir);
                 
             const pdfDoc = await PDFDocument.create();
-            const page = pdfDoc.addPage([500,600]);
+            pdfDoc.ad
+            const page = pdfDoc.addPage([600,300]);
 
-            const backgroundImage = await pdfDoc.embedJpg(blurredImage);
+            const backgroundImage = await pdfDoc.embedJpg(imageBuffer);            
             const { width, height } = page.getSize();
 
             page.drawImage(backgroundImage, {
@@ -65,7 +64,7 @@ class HistoriqueController {
             });
 
             const qrImage = await pdfDoc.embedPng(qrBuffer);
-            const qrSize = 200;
+            const qrSize = 170;
             const qrX = (width - qrSize) / 2; 
             const qrY = (height - qrSize) / 2;
 
