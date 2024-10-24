@@ -7,7 +7,7 @@ function checkEvent (){
     cron.schedule('* * * * *', async () => {
         try {
             const dateheure = moment().tz('Asia/Baghdad').format('YYYY-MM-DD HH:mm:ss');
-            const events = await evnement.findAll({
+            const events = await evenement.findAll({
             where: {
                 estvalide: true,
                 dateheureevenement: {
@@ -16,7 +16,6 @@ function checkEvent (){
             }
             });
             for (const event of events) {
-                console.log(event.dateheureevenement);
                 event.estvalide = false;
                 await event.save();
             }

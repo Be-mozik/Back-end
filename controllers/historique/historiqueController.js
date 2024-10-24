@@ -5,14 +5,15 @@ const ct = require('../../models/clients/clients');
 const moment = require('moment-timezone');
 const QRCode = require('qrcode');
 const path = require('path');
-const { PDFDocument } = require('pdf-lib');
+const { PDFDocument,rgb,StandardFonts } = require('pdf-lib');
 const fs = require('fs');
+const fontkit = require('@pdf-lib/fontkit');
 
 class HistoriqueController {
 
-    async createHistorique(req, res) {
+    async achatBillet(req, res) {
         try {
-            const { idclient, idevenement, idbillet, nombre,datetransaction } = req.body;
+            const { idclient, idevenement, idbillet, nombre } = req.body;
             const client = await ct.findByPk(idclient);
             if (!client) {
                 return res.status(400).send({ message: "Client introuvable." });
@@ -26,7 +27,7 @@ class HistoriqueController {
                 return res.status(500).send({ error: "Erreur lors de la transaction : nombre de billet restant insuffisant." });
             }
             const montant = await billet.calculMontant(idbillet, nombre);
-            const dateheure = moment(Date.now()).tz('Asia/Baghdad').format('DD-MM-YYYY HH:mm:ss');
+            const dateheure = moment().tz('Asia/Baghdad').toDate();
             const eve = await event.getDetailEvent(idevenement);
             const histo = await historique.create({
                 idclient,
@@ -34,24 +35,27 @@ class HistoriqueController {
                 idbillet,
                 nombre,
                 montant,
-                datetransaction: datetransaction
+                datetransaction: dateheure
             });
             const qrBuffer = await QRCode.toBuffer(histo.tokenachat, {
                 errorCorrectionLevel: 'H',
                 margin: 1,
             });
 
-            const uploadsDir = path.join(__dirname, '..', '..', 'assets', 'ticket.jpeg');
-            console.log(uploadsDir);
+            const uploadsFont = path.join(__dirname, '..', '..', 'fonts', 'Cinematografica-Bold-trial.ttf');
+            const fontBytes = fs.readFileSync(uploadsFont);
+            const uploadsDir = path.join(__dirname, '..', '..', 'assets', 'ticket.jpg');
+
             if (!fs.existsSync(uploadsDir)) {
                 return res.status(500).send({ error: "Image non trouvée." });
             }
             
-            const imageBuffer = fs.readFileSync(uploadsDir);
-                
+            const imageBuffer = fs.readFileSync(uploadsDir);                
             const pdfDoc = await PDFDocument.create();
-            pdfDoc.ad
-            const page = pdfDoc.addPage([600,300]);
+            pdfDoc.registerFontkit(fontkit);
+            const fontDate = await pdfDoc.embedFont(StandardFonts.Helvetica);
+            const font = await pdfDoc.embedFont(fontBytes);
+            const page = pdfDoc.addPage([2500,1250]);
 
             const backgroundImage = await pdfDoc.embedJpg(imageBuffer);            
             const { width, height } = page.getSize();
@@ -63,8 +67,24 @@ class HistoriqueController {
                 height,
             });
 
+            page.drawText(eve.nomevenement,{
+                x: 100,
+                y: 300,
+                font: font,
+                size: 144,
+                color: rgb(1,1,1)
+            });
+
+            page.drawText (eve.dateheureevenement,{
+                x:100,
+                y:270,
+                font: fontDate,
+                size: 24,
+                color: rgb(1,1,1)
+            });
+
             const qrImage = await pdfDoc.embedPng(qrBuffer);
-            const qrSize = 170;
+            const qrSize = 700;
             const qrX = (width - qrSize) / 2; 
             const qrY = (height - qrSize) / 2;
 
