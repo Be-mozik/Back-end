@@ -1,23 +1,24 @@
 const { evenement } = require('../models/event/event');
 const cron = require('node-cron');
 const { Op } = require('sequelize');
+const moment = require('moment-timezone');
 
 function checkEvent (){
     cron.schedule('* * * * *', async () => {
         try {
-            let currentDate = new Date();
-            currentDate.setHours(currentDate.getHours() + 3);
-            const events = await evenement.findAll({
+            const dateheure = moment().tz('Asia/Baghdad').format('YYYY-MM-DD HH:mm:ss');
+            const events = await evnement.findAll({
             where: {
                 estvalide: true,
                 dateheureevenement: {
-                [Op.lt]: currentDate
+                [Op.lt]: dateheure
                 }
             }
             });
-                for (const event of events) {
-                    event.estvalide = false;
-                    await event.save();
+            for (const event of events) {
+                console.log(event.dateheureevenement);
+                event.estvalide = false;
+                await event.save();
             }
         } catch (error) {
             console.error(error);
