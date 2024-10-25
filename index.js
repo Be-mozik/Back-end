@@ -25,7 +25,6 @@ app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-const port = process.env.PORT;
 
 app.use('/api/utilisateur',utilisateur);
 app.use('/api/demande',demande);
@@ -39,6 +38,8 @@ app.use('/api/clientS',clientS);
 app.use('/api/ca',caS);
 app.use('/api/eventS',eventS);
 app.use('/api/achatS',achatS);
+
+const port = process.env.PORT;
 
 connect();
 seque.sync().then(() =>{
