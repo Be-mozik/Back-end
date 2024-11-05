@@ -8,6 +8,7 @@ const path = require('path');
 const { PDFDocument,rgb,StandardFonts } = require('pdf-lib');
 const fs = require('fs');
 const fontkit = require('@pdf-lib/fontkit');
+const v_historique_client = require("../../models/historique/v_histo_client");
 
 class HistoriqueController {
 
@@ -108,8 +109,10 @@ class HistoriqueController {
 
     async getAchatByClient(req,res){
         try {
-            const achat = await historique.findAll({
-                where: {idclient: req.params.idclient}
+            const achat = await v_historique_client.findAll({
+                where: {idclient: req.params.idclient},
+                attributes: ['idclient','idevenement','nomevenement','nombillet','nombre','montant','nomdevis','datetransaction'],
+                order: [['datetransaction', 'DESC']]
             });
             res.status(200).json(achat);
         } catch (error) {

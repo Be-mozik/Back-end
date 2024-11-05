@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
 const clients = require('../../models/clients/clients');
+const moment = require('moment-timezone');
+const jwt = require('jsonwebtoken');
 
 class ClientsController {
 
@@ -12,24 +14,50 @@ class ClientsController {
         }
     }
 
-    async createClientFormulaire(req,res){
+    async createClientFormulaire(req, res) {
         try {
-            const { nomclient, prenomclient,mailclient,mdp1,mdp2,dateclient } = req.body;
-            const correct = mdp1 === mdp2;
-            if(!correct){
-                return res.status(500).send({message: "Les mots de passe ne correspondent pas."});
+            const { nomclient, prenomclient, mailclient, mdp1, mdp2 } = req.body;
+            const client = await clients.findOne({ where: { mailclient } });
+            if (client) {
+                return res.status(409).json({ message: 'Utilisateur déjà existant.' });
             }
-            const hashed = await bcrypt.hash(mdp1,10);
-            const clt = await clients.create({
+            if (mdp1 !== mdp2) {
+                return res.status(400).json({ message: "Les mots de passe ne correspondent pas." });
+            }
+            const date = moment().tz('Asia/Baghdad').format('YYYY-MM-DD');
+            const hashed = await bcrypt.hash(mdp1, 10);
+            const newClient = await clients.create({
                 nomclient,
                 prenomclient,
                 mailclient,
                 mdpclient: hashed,
-                dateclient: dateclient,
+                dateclient: date,
             });
-            res.status(200).send("Client enregistré: "+clt);
+            res.status(201).json({ message: "Client enregistré avec succès.", clientId: newClient.id });
         } catch (error) {
-            res.status(500).send("tsy mety: "+error);
+            console.error("Erreur lors de la création du client:", error);
+            res.status(500).json({ message: "Une erreur s'est produite. Veuillez réessayer plus tard.", error: error.message });
+        }
+    }
+
+    async loginClient(req,res){
+        try {
+            const { mail, pass } = req.body;
+            const client = await clients.findOne({ where: {mailclient: mail}});
+            if(!client){
+                return res.status(404).json({message: `L'utilisateur n'a pas été trouvé.`});
+            }
+            const correct = await bcrypt.compare(pass,client.mdpclient);
+            if(!correct){
+                return res.status(401).json({message: 'Le mot de passe est incorrect.'});
+            }
+            const JWT_SECRET= process.env.JWT_SECRET
+            const token = jwt.sign({idclient: client.idclient, nomclient: client.nomclient}, JWT_SECRET, {expiresIn: '3h'});
+            res.status(200).json({token});
+        } catch (error) {
+            console.log(error);
+            
+            res.status(500).send(error);
         }
     }
 
@@ -58,6 +86,8 @@ class ClientsController {
             res.status(404).send(error);
         }
     }
+
+
 }
 
 module.exports = new ClientsController();

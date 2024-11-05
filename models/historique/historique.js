@@ -44,13 +44,6 @@ const historique = seque.define('achat',{
     datetransaction: {
         type: DataTypes.DATE,
         allowNull: false,
-        get() {
-            const rawValue = this.getDataValue('dateheureevenement');
-            if (rawValue) {
-                return moment(rawValue).tz('Asia/Baghdad').format('DD-MM-YYYY HH:mm:ss');
-            }
-            return rawValue;
-        }
     },
     estvalide: {
         type: DataTypes.BOOLEAN,

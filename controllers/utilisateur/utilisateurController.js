@@ -44,7 +44,7 @@ class UtilisateurController {
                 await utilisateur.destroy({ where: { idutilisateur: req.params.idUtilisateur } });
                 res.status(200).send({success: `Accès supprimer pour ${user.prenomutilisateur}`});
             }else{
-                res.status(404).send("Utilisateur non trouvé");
+                res.status(404).send("L'utilisateur n'a pas été trouvé.");
             }
         } catch (error) {
             console.log('Erreur: '+error);
@@ -57,11 +57,11 @@ class UtilisateurController {
             const { mail, pass } = req.body;
             const user = await utilisateur.findOne({ where: {mailutilisateur: mail}});
             if(!user){
-                return res.json({message: 'Utilisateur non trouve'});
+                return res.json({message: `L'utilisateur n'a pas été trouvé.`});
             }
             const correct = await bcrypt.compare(pass,user.mdputilisateur);
             if(!correct){
-                return res.json({message: 'Mot de passe incorrect'});
+                return res.json({message: 'Le mot de passe est incorrect.'});
             }
             const JWT_SECRET= process.env.JWT_SECRET
             const token = jwt.sign({idutilisateur: user.idutilisateur, prenomutilisateur: user.prenomutilisateur, statususer: user.estsuperutilisateur}, JWT_SECRET, {expiresIn: '3h'});
@@ -120,9 +120,9 @@ class UtilisateurController {
                 await demande.destroy({
                     where: { iddemande: dem.iddemande }
                 });
-                res.status(200).json({success: `Accès autorisé pour ${user.prenomutilisateur}`});
+                res.status(200).json({success: `Accès autorisé pour ${user.prenomutilisateur}.`});
             }else{
-                res.status(400).send({message: "Demande non trouvée"});
+                res.status(400).send({message: "Demande non trouvée."});
             }            
         } catch (error) {
             

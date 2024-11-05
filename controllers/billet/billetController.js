@@ -135,6 +135,31 @@ class BilletController{
         }
     }
 
+    async checkBilletPostMan(req, res) {
+        try {
+            const b = await billet.findByPk(req.params.idbillet);
+            if (!b) {
+                return res.json({ success: false, message: "Le billet n'existe pas." });
+            }
+            const venteDeCeBillet = await historique.sum('nombre', { where: { idbillet: req.params.idbillet } });
+            const disponible = b.nombrebillet - venteDeCeBillet;
+            const isAvailable = req.body.nombre <= disponible;
+            if (isAvailable) {
+                return res.json({ success: true, available: true });
+            } else {
+                return res.json({
+                    success: false,
+                    available: false,
+                    message: `Quantité insuffisante. Seulement ${disponible} billets disponibles.`
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ success: false, message: 'Erreur du serveur' });
+        }
+    }
+    
+
     async calculMontant(idbillet,nombre){
         try {
             const devis = process.env.DEVIS_KEY;
