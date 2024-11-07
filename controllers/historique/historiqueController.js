@@ -72,15 +72,15 @@ class HistoriqueController {
                 x: 100,
                 y: 300,
                 font: font,
-                size: 144,
+                size: 200,
                 color: rgb(1,1,1)
             });
 
             page.drawText (eve.dateheureevenement,{
                 x:100,
-                y:270,
+                y:250,
                 font: fontDate,
-                size: 24,
+                size: 50,
                 color: rgb(1,1,1)
             });
 

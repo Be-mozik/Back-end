@@ -57,11 +57,11 @@ class UtilisateurController {
             const { mail, pass } = req.body;
             const user = await utilisateur.findOne({ where: {mailutilisateur: mail}});
             if(!user){
-                return res.json({message: `L'utilisateur n'a pas été trouvé.`});
+                return res.status(404).json({message: `L'utilisateur n'a pas été trouvé.`});
             }
             const correct = await bcrypt.compare(pass,user.mdputilisateur);
             if(!correct){
-                return res.json({message: 'Le mot de passe est incorrect.'});
+                return res.status(401).json({message: 'Le mot de passe est incorrect.'});
             }
             const JWT_SECRET= process.env.JWT_SECRET
             const token = jwt.sign({idutilisateur: user.idutilisateur, prenomutilisateur: user.prenomutilisateur, statususer: user.estsuperutilisateur}, JWT_SECRET, {expiresIn: '3h'});
@@ -80,37 +80,41 @@ class UtilisateurController {
         try {
             const dem = await demande.findByPk(req.params.iddemande);
             if(dem){
-                // const transporter = nodemailer.createTransport({
-                //     service: 'gmail',
-                //       auth: {
-                //           user: process.env.EMAIL_USER,
-                //           pass: process.env.APP_PASS,
-                //       },
-                //       tls: {
-                //         rejectUnauthorized: false
-                //       }
-                //   });
+                const transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                      auth: {
+                          user: process.env.EMAIL_USER,
+                          pass: process.env.APP_PASS,
+                      },
+                      tls: {
+                        rejectUnauthorized: false
+                      }
+                  });
             
-                //   const mailOption = {
-                //     from: {
-                //       name: 'Be mozik',
-                //       address: process.env.EMAIL_USER
-                //   },
-                //     to: dem.maildemande,
-                //     subject: 'Demande approuvée',
-                //     text: `Bonjour,
-                    
-                //     Votre demande a bien été approuvée
-                //     ${dem.prenomdemande}`
-                //   };
+                  const mailOption = {
+                    from: {
+                      name: 'Be mozik',
+                      address: process.env.EMAIL_USER
+                  },
+                    to: dem.maildemande,
+                    subject: `Confirmation de l'approbation de votre demande`,
+                    text: `Bonjour ${dem.prenomdemande},
+                    Nous avons le plaisir de vous informer que votre demande a été examinée et approuvée avec succès. Vous pouvez désormais accéder aux fonctionnalités ou services concernés sans restriction.
+
+                    Nous restons à votre disposition pour toute question ou assistance supplémentaire. N'hésitez pas à nous contacter si besoin.
+
+                    Cordialement,
+                    L'équipe Be Mozik
+                    `
+                  };
             
-                //   await transporter.sendMail(mailOption, (err, info) => {
-                //     if (err) {
-                //       console.log(err);
-                //       res.status(400).json({message :"Une erreur a été rencontrée, veuillez réessayer !"});
-                //     }
-                //     console.log('Email sent: ' + info.response);
-                //   });
+                  await transporter.sendMail(mailOption, (err, info) => {
+                    if (err) {
+                      console.log(err);
+                      res.status(400).json({message :"Une erreur a été rencontrée, veuillez réessayer !"});
+                    }
+                    console.log('Email sent: ' + info.response);
+                  });
 
                 const user = await utilisateur.create({
                     prenomutilisateur: dem.prenomdemande,
