@@ -1,6 +1,6 @@
 // passport-config.js
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const FacebookStrategy = require("passport-facebook").Strategy;
+
 const passport = require("passport");
 require('dotenv').config();
 const client = require("../models/clients/clients");
