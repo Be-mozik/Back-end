@@ -21,13 +21,14 @@ class HistoriqueController {
             }
             const valideEvent = await event.checkEvent(idevenement);
             const valideBillet = await billet.checkBillet(idbillet, nombre);
+            
             if (!valideEvent) {
                 return res.status(500).send({ error: "Erreur lors de la transaction : l'événement est passé." });
             }
             if (!valideBillet) {
                 return res.status(500).send({ error: "Erreur lors de la transaction : nombre de billet restant insuffisant." });
             }
-            const montant = await billet.calculMontant(idbillet, nombre);
+            const montant = await billet.calculMontant(idbillet, nombre);            
             const dateheure = moment().tz('Asia/Baghdad').toDate();
             const eve = await event.getDetailEvent(idevenement);
             const histo = await historique.create({

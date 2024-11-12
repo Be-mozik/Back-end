@@ -124,6 +124,8 @@ class BilletController{
     async checkBillet(idbillet, nombre) {
         try {
             const b = await billet.findByPk(idbillet);
+            console.log(b);
+            
             if (!b) {
                 return false;
             }
