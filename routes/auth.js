@@ -13,7 +13,13 @@ router.get(
   }
 );
 
+router.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }));
 
+router.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: 'http://localhost:3000/Connexion' }),
+  (req, res) => {
+    res.redirect(`http://localhost:3000/Accueil?token=${req.user.token}`);
+});
 
 
 module.exports = router;
