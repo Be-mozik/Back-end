@@ -2,28 +2,35 @@ const { evenement } = require('../models/event/event');
 const cron = require('node-cron');
 const { Op } = require('sequelize');
 const moment = require('moment-timezone');
+const eventEtat = require('../models/eventEtat/eventEtat');
 
-function checkEvent (){
+function checkEvent() {
     cron.schedule('* * * * *', async () => {
         try {
-            const dateheure = moment().tz('Asia/Baghdad').format('YYYY-MM-DD HH:mm:ss');
+            const currentTime = moment().tz('Asia/Baghdad').toDate();
             const events = await evenement.findAll({
-            where: {
-                estvalide: true,
-                dateheureevenement: {
-                [Op.lt]: dateheure
+                where: {
+                    estvalide: true,
+                    dateheureevenement: {
+                        [Op.lt]: currentTime 
+                    }
                 }
-            }
             });
-            for (const event of events) {
+            const updatePromises = events.map(async (event) => {
                 event.estvalide = false;
-                event.etat = "Passé"
                 await event.save();
-            }
+                const etat = await eventEtat.findOne({
+                    where: { idevenement: event.idevenement }
+                });
+                if (etat) {
+                    await etat.update({ idetat: 3 });
+                }
+            });
+            await Promise.all(updatePromises);
         } catch (error) {
-            console.error(error);
+            console.error('Erreur dans le cron job checkEvent:', error);
         }
     });
 }
 
-module.exports = { checkEvent }
+module.exports = { checkEvent };

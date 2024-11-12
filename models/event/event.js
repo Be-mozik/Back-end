@@ -70,11 +70,6 @@ const evenement = seque.define('evenement', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true,
-    },
-    etat: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: "À venir",
     }
 },{
     tableName: 'evenement',

@@ -31,6 +31,19 @@ create table demande(
 
 insert into demande VALUES(concat('Demande ',nextval('seq_demande')),'Yasuo','yasuo@gmail.com','123');
 
+CREATE table etat(
+    idEtat SERIAL PRIMARY key,
+    nomEtat VARCHAR
+);
+
+select * from etat
+
+insert into etat (nometat) VALUES('À venir');
+insert into etat (nometat) VALUES('Passé');
+insert into etat (nometat) VALUES('Annulé');
+
+
+
 create sequence seq_evenement
 increment by 1
 start with 1;
@@ -44,13 +57,35 @@ create table evenement(
     descriEvenement VARCHAR(255),
     imgEvenement VARCHAR(255),
     estValide BOOLEAN,
-    etat VARCHAR,
     Foreign Key (idUtilisateur) REFERENCES utilisateur(idUtilisateur)    
 );
 
-ALTER TABLE evenement ADD COLUMN etat VARCHAR;
+create table eventetat(
+    idetat INTEGER,
+    idEvenement VARCHAR,
+    Foreign Key (idetat) REFERENCES etat(idetat),
+    Foreign Key (idevenement) REFERENCES evenement(idevenement)
+);
 
-alter table evenement ADD COLUMN estValide BOOLEAN DEFAULT true;
+insert into eventetat (idetat,idevenement) VALUES (1,'Event 30');
+
+select * from eventetat
+
+create or replace view v_event as
+
+select
+    evenement.idevenement,
+    evenement.idutilisateur,
+    evenement.nomevenement,
+    evenement.dateheureevenement,
+    evenement.lieuevenement,
+    evenement.descrievenement,
+    evenement.imgevenement,
+    etat.idetat,
+    etat.nometat
+from eventetat
+join etat on etat.idetat = eventetat.idetat
+join evenement on evenement.idevenement = eventetat.idevenement
 
 CREATE Table Devis(
     idDevis INTEGER PRIMARY key,
@@ -111,6 +146,7 @@ CREATE TABLE public.achat (
     datetransaction timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     estvalide boolean DEFAULT true
 );
+
 
 
 CREATE VIEW public.achat_summary AS

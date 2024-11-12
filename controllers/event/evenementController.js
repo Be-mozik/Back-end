@@ -1,10 +1,13 @@
 const { evenement } = require("../../models/event/event");
+const v_etat = require("../../models/event/v_event");
 const { utilisateur } = require("../../models/utilisateur/utilisateur");
 const billet = require("../../controllers/billet/billetController");
 const info = require("../../controllers/infoline/infolineController");
+const eventEtat = require('../../models/eventEtat/eventEtat'); 
 const moment = require('moment-timezone');
 const multer = require('multer');
 const path = require('path');
+
 
 const storage = multer.diskStorage({
     destination: (req,file,cb)=>{
@@ -21,16 +24,18 @@ class EventController{
 
     async getAllEvent(req,res){
         try {
-            const events = await evenement.findAll({ order: [['dateheureevenement', 'DESC']] });
+            const events = await v_etat.findAll({ order: [['dateheureevenement', 'DESC']] });
             res.json(events);
         } catch (error) {
+            console.log(error);
+            
             res.status(500).send(error);
         }
     }
 
     async getEventById(req,res){
         try {
-            const event = await evenement.findByPk(req.params.idEvent);
+            const event = await v_etat.findByPk(req.params.idEvent);
             res.json(event);
         } catch (error) {
             res.status(500).send(error);
@@ -39,7 +44,7 @@ class EventController{
 
     async getDetailEvent(idevent){
         try {
-            const event = await evenement.findByPk(idevent);
+            const event = await v_etat.findByPk(idevent);
             return event;
         } catch (error) {
             throw error;
@@ -67,6 +72,10 @@ class EventController{
                     lieuevenement: lieuevenement,
                     descrievenement: descrievenement,
                     imgevenement: imgevenement
+                });
+                await eventEtat.create({
+                    idevenement: event.idevenement,
+                    idetat: 1
                 });
                 const billets = typeof b === 'string' ? JSON.parse(b) : b;
                 const infos = typeof i === 'string' ? JSON.parse(i) : i;
@@ -141,15 +150,24 @@ class EventController{
     async annulerEvent(req,res){
         try {
             const event = await evenement.findByPk(req.params.idEvent);
+            const etat = await eventEtat.findOne({
+                where: {idevenement: req.params.idEvent}
+            });
+            console.log(etat);
+            
             if(!event){
                 return res.status(400).send({message: "Evenement inconnu."});
             }
             await event.update({
                 estvalide: false,
-                etat : "Annulé",
+            });
+            await etat.update({
+                idetat: 2,
             });
             res.status(200).send({success: 'Evenement annulé'})
         } catch (error) {
+            console.log(error);
+            
             res.status(400).send(error);
         }
     }
