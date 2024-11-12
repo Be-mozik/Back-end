@@ -145,7 +145,8 @@ class EventController{
                 return res.status(400).send({message: "Evenement inconnu."});
             }
             await event.update({
-                estvalide: false
+                estvalide: false,
+                etat : "Annulé",
             });
             res.status(200).send({success: 'Evenement annulé'})
         } catch (error) {

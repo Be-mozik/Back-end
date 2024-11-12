@@ -17,6 +17,7 @@ function checkEvent (){
             });
             for (const event of events) {
                 event.estvalide = false;
+                event.etat = "Passé"
                 await event.save();
             }
         } catch (error) {
