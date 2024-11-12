@@ -5,6 +5,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 const { checkEvent } = require('./services/checkEvent');
+const passport = require("pass")
 
 const utilisateur = require("./routes/utilisateur/utilisateurRoutes");
 const demande = require("./routes/demande/demandeRoutes");
