@@ -1,4 +1,6 @@
 const { infoline } = require('../../models/infoline/infoline');
+const eventinfo = require('../../models/eventInfo/eventInfo');
+const v_info = require('../../models/infoline/v_info');
 
 class InfolineController{
     async getAllInfo(req,res){
@@ -21,7 +23,7 @@ class InfolineController{
 
     async getInfoByEvent(req,res){
         try {
-            const infos = await infoline.findAll({where: {
+            const infos = await v_info.findAll({where: {
                 idevenement: req.params.idevenement
             }});
             res.status(200).json(infos);
@@ -47,6 +49,9 @@ class InfolineController{
 
     async deleteInfoByEvent(idEvent){
         try {
+            await eventinfo.destroy({
+                where: {idevenement:idEvent}
+            });
             await infoline.destroy({
                 where: {idevenement: idEvent}
             });
@@ -95,6 +100,10 @@ class InfolineController{
                 idevenement: idevenement,
                 numeroinfo: numeroinfo,
                 nominfo: nominfo
+            });
+            await eventinfo.create({
+                idinfo: info.idinfo,
+                idevenement: idevenement
             });
             return info;
         } catch (error) {

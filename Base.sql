@@ -42,8 +42,6 @@ insert into etat (nometat) VALUES('À venir');
 insert into etat (nometat) VALUES('Passé');
 insert into etat (nometat) VALUES('Annulé');
 
-
-
 create sequence seq_evenement
 increment by 1
 start with 1;
@@ -107,18 +105,47 @@ create table billetEvenement(
     Foreign Key (idDevis) REFERENCES devis(iddevis)
 );
 
+create table eventbillet(
+    idbillet VARCHAR,
+    idevenement VARCHAR,
+    Foreign Key (idbillet) REFERENCES billetEvenement(idbillet),
+    Foreign Key (idevenement) REFERENCES evenement(idevenement)
+);
+
+select * from eventbillet
+
 create SEQUENCE seq_info
 INCREMENT by 1
 start with 1;
 
 create table infoEvenement(
-    idEvenement VARCHAR,
+    idevenement VARCHAR,
     idInfo VARCHAR PRIMARY KEY,
     numeroInfo VARCHAR,
+    nominfo VARCHAR,
     Foreign Key (idEvenement) REFERENCES evenement(idEvenement)
 );
 
-ALTER TABLE infoEvenement ADD COLUMN nomInfo VARCHAR(255);
+select * from infoevenement
+
+create table eventinfo(
+    idinfo VARCHAR,
+    idevenement VARCHAR,
+    Foreign Key (idinfo) REFERENCES infoevenement(idinfo),
+    Foreign Key (idevenement) REFERENCES evenement(idevenement)
+);
+
+insert into eventinfo (idinfo,idevenement) VALUES ('Info 78','Event 30');
+
+CREATE or replace view v_info as
+select 
+    evenement.idevenement,
+    eventinfo.idinfo,
+    infoevenement.nominfo,
+    infoevenement.numeroinfo
+from eventinfo
+join infoevenement on infoevenement.idinfo = eventinfo.idinfo
+join evenement on evenement.idevenement = eventinfo.idevenement
 
 SHOW timezone;
 ALTER TABLE evenement ALTER COLUMN dateheureevenement TYPE TIMESTAMP WITH TIME ZONE;
@@ -146,8 +173,6 @@ CREATE TABLE public.achat (
     datetransaction timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     estvalide boolean DEFAULT true
 );
-
-
 
 CREATE VIEW public.achat_summary AS
  SELECT count(*) AS nb_achat,
@@ -272,17 +297,42 @@ CREATE VIEW public.v_achat AS
      JOIN public.evenement ON (((evenement.idevenement)::text = (achat.idevenement)::text)))
      JOIN public.billetevenement ON (((billetevenement.idbillet)::text = (achat.idbillet)::text)));
 
-CREATE VIEW public.v_billet_achat_event AS
-SELECT
-    NULL::character varying AS idevenement,
-    NULL::character varying AS idbillet,
-    NULL::character varying(255) AS nombillet,
-    NULL::numeric(9,2) AS tarifbillet,
-    NULL::character varying(255) AS nomdevis,
-    NULL::integer AS nombrebillet,
-    NULL::bigint AS total_achats;
+-- V_billet_achat
+CREATE OR REPLACE VIEW public.v_billet_achat_event AS
+ SELECT b.idevenement,
+    b.idbillet,
+    b.nombillet,
+    b.tarifbillet,
+    devis.nomdevis,
+    b.nombrebillet,
+    COALESCE(sum(a.nombre), (0)::bigint) AS total_achats
+   FROM ((public.billetevenement b
+     JOIN public.devis ON ((devis.iddevis = b.iddevis)))
+     LEFT JOIN public.achat a ON (((b.idbillet)::text = (a.idbillet)::text)))
+  GROUP BY b.idevenement, b.idbillet, b.nombillet, devis.nomdevis;
 
+select 
+    eventbillet.idevenement,
+    eventbillet.idbillet,
+    billetevenement.nombillet,
+    billetevenement.tarifbillet,
+    devis.nomdevis,
+    billetevenement.nombrebillet,
+    COALESCE(SUM(achat.nombre), 0) AS total_achats
+from eventbillet
+join billetevenement on billetevenement.idbillet = eventbillet.idevenement
+join devis on devis.iddevis = billetevenement.iddevis
+LEFT JOIN 
+    achat ON billetevenement.idbillet = achat.idbillet
+GROUP BY 
+    eventbillet.idevenement,
+    eventbillet.idbillet,
+    billetevenement.nombillet,
+    billetevenement.tarifbillet,
+    devis.nomdevis,
+    billetevenement.nombrebillet
 
+-- Client_historique
 CREATE VIEW public.v_historique_client AS
  SELECT achat.idclient,
     achat.idevenement,
@@ -298,6 +348,7 @@ CREATE VIEW public.v_historique_client AS
      JOIN public.billetevenement ON (((billetevenement.idbillet)::text = (achat.idbillet)::text)))
      JOIN public.devis ON ((devis.iddevis = billetevenement.iddevis)));
 
+-- Stat_event
 CREATE VIEW public.v_stat_event AS
  SELECT achat.idevenement,
     sum(achat.montant) AS montant,
@@ -305,7 +356,7 @@ CREATE VIEW public.v_stat_event AS
    FROM public.achat
   GROUP BY achat.idevenement;
 
-
+-- 
   CREATE OR REPLACE VIEW public.v_billet_achat_event AS
  SELECT b.idevenement,
     b.idbillet,

@@ -3,6 +3,7 @@ const { billet } = require("../../models/billet/billet");
 const historique = require("../../models/historique/historique");
 require('dotenv').config();
 const axios = require('axios');
+const eventBillet = require("../../models/eventBillet/eventBillet");
 
 class BilletController{
     async getAllBillet(req,res){
@@ -62,6 +63,9 @@ class BilletController{
 
     async deleteBilletByEvent(idEvent){
         try {
+            await eventBillet.destroy({
+                where: {idevenement: idEvent}
+            });
             await billet.destroy({
                 where: {idevenement: idEvent}
             });
@@ -115,6 +119,10 @@ class BilletController{
                 iddevis: iddevis,
                 nombrebillet: nombrebillet
             });
+            await eventBillet.create({
+                idbillet: bt.idbillet,
+                idevenement: idevenement,
+            });
             return bt;
         } catch (error) {
             console.log(error);
@@ -124,8 +132,6 @@ class BilletController{
     async checkBillet(idbillet, nombre) {
         try {
             const b = await billet.findByPk(idbillet);
-            console.log(b);
-            
             if (!b) {
                 return false;
             }

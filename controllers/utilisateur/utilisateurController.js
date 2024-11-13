@@ -90,7 +90,6 @@ class UtilisateurController {
                         rejectUnauthorized: false
                       }
                   });
-            
                   const mailOption = {
                     from: {
                       name: 'Be mozik',
@@ -107,7 +106,6 @@ class UtilisateurController {
                     L'équipe Be Mozik
                     `
                   };
-            
                   await transporter.sendMail(mailOption, (err, info) => {
                     if (err) {
                       console.log(err);
@@ -115,7 +113,6 @@ class UtilisateurController {
                     }
                     console.log('Email sent: ' + info.response);
                   });
-
                 const user = await utilisateur.create({
                     prenomutilisateur: dem.prenomdemande,
                     mailutilisateur: dem.maildemande,
