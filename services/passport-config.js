@@ -42,7 +42,7 @@ passport.use(
     new FacebookStrategy({
         clientID: process.env.FACEBOOK_APP_ID,
         clientSecret: process.env.FACEBOOK_APP_KEY,
-        callbackURL: "/auth/facebook/callback",
+        callbackURL: "http://localhost:3000/auth/facebook/callback",
         profileFields: ['id', 'emails', 'name']
     },
     async function(accessToken, refreshToken, profile, callback) {
@@ -71,10 +71,6 @@ passport.use(
         }
     })
 );
-  
-
-
-
 
 passport.serializeUser((user, done) => {
     done(null, user);
