@@ -1,5 +1,6 @@
 const { demande } = require("../../models/demande/Demande");
-const { utilisateur } = require("../../models/utilisateur/utilisateur");
+const path = require('path');
+const { utilisateur } = require(path.join(__dirname, '../../models/utilisateur/utilisateur'));
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
