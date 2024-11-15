@@ -31,6 +31,7 @@ class HistoriqueController {
             const montant = await billet.calculMontant(idbillet, nombre);            
             const dateheure = moment().tz('Asia/Baghdad').toDate();
             const eve = await event.getDetailEvent(idevenement);
+            const b = await billet.getBilletByIdSample(idbillet);
             const histo = await historique.create({
                 idclient,
                 idevenement,
@@ -71,7 +72,7 @@ class HistoriqueController {
 
             page.drawText(eve.nomevenement,{
                 x: 100,
-                y: 300,
+                y: 400,
                 font: font,
                 size: 200,
                 color: rgb(1,1,1)
@@ -79,9 +80,25 @@ class HistoriqueController {
 
             page.drawText (eve.dateheureevenement,{
                 x:100,
-                y:250,
+                y:330,
                 font: fontDate,
-                size: 50,
+                size: 45,
+                color: rgb(1,1,1)
+            });
+
+            page.drawText (eve.lieuevenement,{
+                x: 100,
+                y: 270,
+                font: fontDate,
+                size: 45,
+                color: rgb(1,1,1)
+            });
+
+            page.drawText (`${b.nombillet}: ${nombre}`,{
+                x: 100,
+                y: 210,
+                font: fontDate,
+                size: 45,
                 color: rgb(1,1,1)
             });
 
@@ -98,7 +115,7 @@ class HistoriqueController {
             });
 
             const pdfBytes = await pdfDoc.save();
-            res.setHeader('Content-Disposition', `attachment; filename="${eve.nomevenement}.pdf"`);
+            res.setHeader('Content-Disposition', `attachment; filename="${eve.nomevenement} - ${b.nombillet}.pdf"`);
             res.setHeader('Content-Type', 'application/pdf');
             res.setHeader('Content-Length', Buffer.byteLength(pdfBytes));
             res.end(pdfBytes);

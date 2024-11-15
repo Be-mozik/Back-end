@@ -1,5 +1,5 @@
 const { evenement } = require("../../models/event/event");
-const v_etat = require("../../models/event/v_event");
+const v_event = require("../../models/event/v_event");
 const { utilisateur } = require("../../models/utilisateur/utilisateur");
 const billet = require("../../controllers/billet/billetController");
 const info = require("../../controllers/infoline/infolineController");
@@ -7,6 +7,7 @@ const eventEtat = require('../../models/eventEtat/eventEtat');
 const moment = require('moment-timezone');
 const multer = require('multer');
 const path = require('path');
+
 
 
 const storage = multer.diskStorage({
@@ -24,18 +25,17 @@ class EventController{
 
     async getAllEvent(req,res){
         try {
-            const events = await v_etat.findAll({ order: [['dateheureevenement', 'DESC']] });
+            const events = await v_event.findAll({ order: [['dateheureevenement', 'DESC']] });
             res.json(events);
         } catch (error) {
             console.log(error);
-            
             res.status(500).send(error);
         }
     }
 
     async getEventById(req,res){
         try {
-            const event = await v_etat.findByPk(req.params.idEvent);
+            const event = await v_event.findByPk(req.params.idEvent);
             res.json(event);
         } catch (error) {
             res.status(500).send(error);
@@ -44,7 +44,7 @@ class EventController{
 
     async getDetailEvent(idevent){
         try {
-            const event = await v_etat.findByPk(idevent);
+            const event = await v_event.findByPk(idevent);
             return event;
         } catch (error) {
             throw error;
@@ -184,6 +184,20 @@ class EventController{
             throw error;
         }
     }
+
+    async getEventValide(req, res) {
+        try {
+            const evenement = await v_event.findAll({
+                where: { idetat: 1 },
+                order: [['dateheureevenement', 'DESC']] 
+            });
+            res.json(evenement);
+        } catch (error) {
+            console.error(error);
+            res.status(500).send({ message: "Erreur interne du serveur", error: error.message });
+        }
+    }
+    
 }
 
 module.exports = new EventController();

@@ -24,6 +24,15 @@ class BilletController{
         }
     }
 
+    async getBilletByIdSample(idbillet){
+        try {
+            const bt = await billet.findByPk(idbillet);
+            return bt;
+        } catch (error) {
+            res.status(400).send(error);
+        }
+    }
+
     async getBilletByEventPostMan(req,res){
         try {
             const bt = await billet.findAll({where: {

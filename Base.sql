@@ -85,6 +85,9 @@ from eventetat
 join etat on etat.idetat = eventetat.idetat
 join evenement on evenement.idevenement = eventetat.idevenement
 
+SELECT * FROM v_event WHERE idetat = 1 ORDER BY dateheureevenement DESC;
+
+
 CREATE Table Devis(
     idDevis INTEGER PRIMARY key,
     nomDevis VARCHAR
