@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const clients = require('../../models/clients/clients');
 const moment = require('moment-timezone');
 const jwt = require('jsonwebtoken');
