@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 
 const corsOptions = {
     origin: (origin, callback) => {
-      const allowedOrigins = ['http://localhost:3000', 'http://10.0.2.2:5000'];
+      const allowedOrigins = ['http://localhost:3000', 'http://10.0.2.2:5000','https://superlative-biscotti-b7114f.netlify.app/'];
       if (allowedOrigins.includes(origin) || !origin) {
         callback(null, true);
       } else {

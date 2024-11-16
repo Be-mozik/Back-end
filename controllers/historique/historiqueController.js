@@ -48,7 +48,8 @@ class HistoriqueController {
             const uploadsFont = path.join(__dirname, '..', '..', 'fonts', 'Cinematografica-Bold-trial.ttf');
             const fontBytes = fs.readFileSync(uploadsFont);
             const uploadsDir = path.join(__dirname, '..', '..', 'assets', 'ticket.jpg');
-
+            console.log(uploadsDir);
+            
             if (!fs.existsSync(uploadsDir)) {
                 return res.status(500).send({ error: "Image non trouvée." });
             }
