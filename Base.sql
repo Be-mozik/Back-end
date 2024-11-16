@@ -52,11 +52,18 @@ create table evenement(
     nomEvenement VARCHAR (255),
     dateheureEvenement TIMESTAMP,
     lieuEvenement VARCHAR(255),
-    descriEvenement VARCHAR(255),
+    descriEvenement Text,
     imgEvenement VARCHAR(255),
     estValide BOOLEAN,
     Foreign Key (idUtilisateur) REFERENCES utilisateur(idUtilisateur)    
 );
+
+DESCRIBE evenement;
+
+ALTER TABLE evenement ALTER COLUMN descriEvenement TYPE TEXT;
+
+
+
 
 create table eventetat(
     idetat INTEGER,

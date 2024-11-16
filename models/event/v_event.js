@@ -29,7 +29,7 @@ const v_event = seque.define('v_event',{
         type: DataTypes.STRING,
     },
     descrievenement: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
     },
     imgevenement: {
         type: DataTypes.STRING,
