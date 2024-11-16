@@ -26,19 +26,24 @@ const app = express();
 app.use(bodyParser.json());
 
 const corsOptions = {
-    origin: (origin, callback) => {
-      const allowedOrigins = ['http://localhost:3000', 'http://10.0.2.2:5000','https://superlative-biscotti-b7114f.netlify.app/'];
-      if (allowedOrigins.includes(origin) || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    exposedHeaders: ['Content-Disposition'],
-  };
-  app.use(cors(corsOptions));
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://10.0.2.2:5000',
+      'https://superlative-biscotti-b7114f.netlify.app',
+    ];
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Content-Disposition'],
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
