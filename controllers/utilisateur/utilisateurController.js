@@ -1,4 +1,4 @@
-const { demande } = require("../../models/demande/Demande");
+const { demande } = require("../../models/demande/demande");
 const path = require('path');
 const { utilisateur } = require(path.join(__dirname, '../../models/utilisateur/utilisateur'));
 const bcrypt = require('bcryptjs');
