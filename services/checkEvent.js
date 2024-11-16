@@ -7,8 +7,7 @@ const eventEtat = require('../models/eventEtat/eventEtat');
 function checkEvent() {
     cron.schedule('* * * * *', async () => {
         try {
-            // const currentTime = moment().tz('Asia/Baghdad').toDate();
-            const currentTime = moment().toDate();
+            const currentTime = moment().tz('Asia/Baghdad').toDate();
             const events = await evenement.findAll({
                 where: {
                     estvalide: true,
