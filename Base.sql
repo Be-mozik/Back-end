@@ -42,6 +42,7 @@ insert into etat (nometat) VALUES('À venir');
 insert into etat (nometat) VALUES('Passé');
 insert into etat (nometat) VALUES('Annulé');
 
+
 create sequence seq_evenement
 increment by 1
 start with 1;
@@ -50,19 +51,13 @@ create table evenement(
     idEvenement VARCHAR PRIMARY key,
     idUtilisateur VARCHAR,
     nomEvenement VARCHAR (255),
-    dateheureEvenement TIMESTAMP,
+    dateheureEvenement TIMESTAMP with time zone,
     lieuEvenement VARCHAR(255),
     descriEvenement Text,
     imgEvenement VARCHAR(255),
     estValide BOOLEAN,
     Foreign Key (idUtilisateur) REFERENCES utilisateur(idUtilisateur)    
 );
-
-DESCRIBE evenement;
-
-ALTER TABLE evenement ALTER COLUMN descriEvenement TYPE TEXT;
-
-
 
 
 create table eventetat(
@@ -95,9 +90,15 @@ SELECT * FROM v_event WHERE idetat = 1 ORDER BY dateheureevenement DESC;
 
 
 CREATE Table Devis(
-    idDevis INTEGER PRIMARY key,
+    idDevis serial PRIMARY key,
     nomDevis VARCHAR
 );
+
+insert into devis(nomdevis) VALUES('EUR');
+insert into devis (nomdevis)VALUES('USD');
+insert into devis (nomdevis)VALUES('MGA');
+
+
 
 create SEQUENCE seq_billet
 INCREMENT by 1
@@ -156,8 +157,6 @@ from eventinfo
 join infoevenement on infoevenement.idinfo = eventinfo.idinfo
 join evenement on evenement.idevenement = eventinfo.idevenement
 
-SHOW timezone;
-ALTER TABLE evenement ALTER COLUMN dateheureevenement TYPE TIMESTAMP WITH TIME ZONE;
 
 CREATE SEQUENCE seq_client
     START WITH 1
@@ -365,7 +364,7 @@ CREATE VIEW public.v_stat_event AS
    FROM public.achat
   GROUP BY achat.idevenement;
 
--- 
+-- v_billet_achat_event
   CREATE OR REPLACE VIEW public.v_billet_achat_event AS
  SELECT b.idevenement,
     b.idbillet,

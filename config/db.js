@@ -1,8 +1,8 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-const seque = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
-    host: process.env.DB_HOST,
+const seque = new Sequelize('postgresql://postgres:sYUrMoRbPvpPFgjDMdkdrqMJbDzBnwJA@junction.proxy.rlwy.net:11405/railway', {
+    protocol: 'postgres',
     dialect: 'postgres',
 });
 

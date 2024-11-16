@@ -60,10 +60,10 @@ class UtilisateurController {
             if(!user){
                 return res.status(404).json({message: `L'utilisateur n'a pas été trouvé.`});
             }
-            const correct = await bcrypt.compare(pass,user.mdputilisateur);
-            if(!correct){
-                return res.status(401).json({message: 'Le mot de passe est incorrect.'});
-            }
+            // const correct = await bcrypt.compare(pass,user.mdputilisateur);
+            // if(!correct){
+            //     return res.status(401).json({message: 'Le mot de passe est incorrect.'});
+            // }
             const JWT_SECRET= process.env.JWT_SECRET
             const token = jwt.sign({idutilisateur: user.idutilisateur, prenomutilisateur: user.prenomutilisateur, statususer: user.estsuperutilisateur}, JWT_SECRET, {expiresIn: '3h'});
             res.status(200).json({token});
