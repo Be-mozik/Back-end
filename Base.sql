@@ -15,7 +15,7 @@ create table utilisateur(
     estSuperUtilisateur BOOLEAN DEFAULT false,
     depuisUtilisateur date DEFAULT current_date
 );
-insert into utilisateur VALUES(concat('User ',nextval('seq_util')),'Jean','jean@gmail.com','123',true);
+insert into utilisateur VALUES(concat('User ',nextval('seq_util')),'Jean','jean@example.com','123',true);
 
 create sequence seq_demande
 increment by 1
@@ -70,7 +70,6 @@ insert into eventetat (idetat,idevenement) VALUES (1,'Event 30');
 select * from eventetat
 
 create or replace view v_event as
-
 select
     evenement.idevenement,
     evenement.idutilisateur,

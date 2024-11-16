@@ -7,7 +7,8 @@ const eventEtat = require('../../models/eventEtat/eventEtat');
 const moment = require('moment-timezone');
 const multer = require('multer');
 const path = require('path');
-
+const clients = require("../../models/clients/clients");
+const sendEmail = require("../../services/sendMail");
 
 
 const storage = multer.diskStorage({
@@ -93,7 +94,6 @@ class EventController{
         });
     }
 
-
     async updateEvent(req,res){
         upload.single('photo')(req, res, async (err) => {
             if (err) {
@@ -124,14 +124,35 @@ class EventController{
             for( const infoData of infos ){
                 await info.createInfo(event.idevenement,infoData.numeroinfo,infoData.nominfo);
             }
+            const emailClients = await clients.findAll({
+                attributes: ['mailclient'],
+            });
+            const emailPromises = emailClients.map((email) => {
+                if (!email.mailclient || email.mailclient.trim() === '') {
+                    return Promise.resolve();
+                }
+                return sendEmail({
+                    to: email.mailclient,
+                    subject: `Mise à jour de l'événement ${nomevenement}`,
+                    html: `
+                        <p>Nous vous informons que l'événement <strong>${nomevenement}</strong> a été modifié. Nous vous invitons à vérifier les nouvelles informations sur notre site.</p>
+                        <p>Nous nous excusons pour tout inconvénient que cela pourrait causer et restons disponibles pour répondre à toutes vos questions.</p>
+                        <p>Si vous avez besoin de plus d'informations, n'hésitez pas à nous contacter.</p>
+                        <p>Cordialement,</p>
+                        <p><strong>Équipe Be Mozik</strong></p>
+                    `,
+                    fromName: 'Be Mozik',
+                });
+            });
+            await Promise.all(emailPromises);
             res.status(200).send({success: `Evenement ${event.nomevenement} modifié.`});
         } catch (error) {
+            console.log(error);
             res.status(500).send({message: 'Erreur lors de la mise à jour de l\'événement: ',error});
         }
         });
     }
     
-
     async deleteEvenement(req,res){
         try {
             const event = await evenement.findByPk(req.params.idEvent);
@@ -147,16 +168,14 @@ class EventController{
         }
     }
 
-    async annulerEvent(req,res){
+    async annulerEvent(req, res) {
         try {
             const event = await evenement.findByPk(req.params.idEvent);
             const etat = await eventEtat.findOne({
-                where: {idevenement: req.params.idEvent}
+                where: { idevenement: req.params.idEvent },
             });
-            console.log(etat);
-            
-            if(!event){
-                return res.status(400).send({message: "Evenement inconnu."});
+            if (!event) {
+                return res.status(400).send({ message: "Événement inconnu." });
             }
             await event.update({
                 estvalide: false,
@@ -164,13 +183,34 @@ class EventController{
             await etat.update({
                 idetat: 2,
             });
-            res.status(200).send({success: 'Evenement annulé'})
+            const emailClients = await clients.findAll({
+                attributes: ['mailclient'],
+            });
+            const emailPromises = emailClients.map((email) => {
+                if (!email.mailclient || email.mailclient.trim() === '') {
+                    return Promise.resolve();
+                }
+                return sendEmail({
+                    to: email.mailclient,
+                    subject: `Annulation de l'événement ${event.nomevenement}`,
+                    html: `
+                        <p>Nous vous informons que l'événement <strong>${event.nomevenement}</strong> a été annulé. Nous nous excusons pour tout inconvénient que cela pourrait causer.</p>
+                        <p>Si vous avez déjà effectué un achat pour cet événement, veuillez nous contacter pour discuter des possibilités de remboursement.</p>
+                        <p>Si vous avez des questions ou besoin de plus d'informations, n'hésitez pas à nous contacter.</p>
+                        <p>Cordialement,</p>
+                        <p><strong>Équipe Be Mozik</strong></p>
+                    `,
+                    fromName: 'Be Mozik',
+                });
+            });
+            await Promise.all(emailPromises);
+            res.status(200).send({ success: 'Événement annulé et notifications envoyées.' });
         } catch (error) {
-            console.log(error);
-            
-            res.status(400).send(error);
+            console.error(error);
+            res.status(400).send({ error: 'Une erreur est survenue lors de l\'annulation de l\'événement.' });
         }
     }
+    
 
     async checkEvent(idevent) {
         try {

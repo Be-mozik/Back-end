@@ -34,37 +34,6 @@ class DemandeController{
         if (!correct) {
             return res.status(400).json({ message: "Les mots de passe ne correspondent pas." });
         }
-          // const transporter = nodemailer.createTransport({
-          //   service: 'gmail',
-          //     auth: {
-          //         user: process.env.EMAIL_USER,
-          //         pass: process.env.APP_PASS,
-          //     },
-          //     tls: {
-          //       rejectUnauthorized: false
-          //     }
-          // });
-
-          // const mailOption = {
-          //   from: {
-          //     name: 'Be mozik',
-          //     address: process.env.EMAIL_USER
-          // },
-          //   to: req.body.maildemande,
-          //   subject: 'Test',
-          //   text: `Bonjour,
-            
-          //   Votre demande a bien été envoyée
-          //   ${prenomdemande}`
-          // };
-
-          // await transporter.sendMail(mailOption, (err, info) => {
-          //   if (err) {
-          //     console.log(err);
-          //     res.status(400).json({message :"Une erreur a été rencontrée, veuillez réessayer !"});
-          //   }
-          //   console.log('Email sent: ' + info.response);
-          // });
           const hashed = await bcrypt.hash(mdp1, 10);
           const dem = await demande.create({
             ...req.body,
@@ -75,45 +44,20 @@ class DemandeController{
           console.log(error);
           res.status(400).send(error);
         }
-      }
+    }
       
     
     async deleteDemande(req,res){
         try {
             const dem = await demande.findOne({where: {iddemande: req.params.idDemande}});
             if(dem){
-              // const transporter = nodemailer.createTransport({
-              //   service: 'gmail',
-              //     auth: {
-              //         user: process.env.EMAIL_USER,
-              //         pass: process.env.APP_PASS,
-              //     },
-              //     tls: {
-              //       rejectUnauthorized: false
-              //     }
-              // });
-        
-              // const mailOption = {
-              //   from: {
-              //     name: 'Be mozik',
-              //     address: process.env.EMAIL_USER
-              // },
-              //   to: dem.maildemande,
-              //   subject: 'Demande refusé',
-              //   text: `Bonjour,
-                
-              //   Malheuresement votre demande a été supprimée
-              //   ${dem.prenomdemande}`
-              // };
-        
-              // await transporter.sendMail(mailOption, (err, info) => {
-              //   if (err) {
-              //     console.log(err);
-              //     res.status(400).json({message :"Une erreur a été rencontrée, veuillez réessayer !"});
-              //   }
-              //   console.log('Email sent: ' + info.response);
-              // });
-
+              await transporter.sendMail(mailOption, (err, info) => {
+                if (err) {
+                  console.log(err);
+                  res.status(400).json({message :"Une erreur a été rencontrée, veuillez réessayer !"});
+                }
+                console.log('Email sent: ' + info.response);
+              });
               await demande.destroy({
                     where: { iddemande: dem.iddemande }
                 });                
