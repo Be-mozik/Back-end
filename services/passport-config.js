@@ -5,7 +5,7 @@ require('dotenv').config();
 const client = require("../models/clients/clients");
 const moment = require('moment');
 const jwt = require('jsonwebtoken');
-
+console.log(process.env.GOOGLE_OAUTH_CLIENT_ID);
 passport.use(
     new GoogleStrategy(
         {
