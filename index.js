@@ -30,7 +30,7 @@ const corsOptions = {
     const allowedOrigins = [
       'http://localhost:3000',
       'http://10.0.2.2:5000',
-      'https://brilliant-beignet-8f166b.netlify.app',
+      'https://dapper-hummingbird-c838d9.netlify.app',
     ];
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);
