@@ -48,8 +48,7 @@ class HistoriqueController {
             const uploadsFont = path.join(__dirname, '..', '..', 'fonts', 'Cinematografica-Bold-trial.ttf');
             const fontBytes = fs.readFileSync(uploadsFont);
             const uploadsDir = path.join(__dirname, '..', '..', 'assets', 'ticket.jpg');
-            console.log(uploadsDir);
-            
+                        
             if (!fs.existsSync(uploadsDir)) {
                 return res.status(500).send({ error: "Image non trouvée." });
             }
@@ -119,7 +118,7 @@ class HistoriqueController {
             res.setHeader('Content-Disposition', `attachment; filename="${eve.nomevenement} - ${b.nombillet}.pdf"`);
             res.setHeader('Content-Type', 'application/pdf');
             res.setHeader('Content-Length', Buffer.byteLength(pdfBytes));
-            res.end(pdfBytes);
+            res.send(Buffer.from(pdfBytes));
         } catch (error) {
             console.error(error);
             res.status(500).send("Erreur: " + error.message);

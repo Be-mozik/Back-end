@@ -97,14 +97,13 @@ class UtilisateurController {
                       address: process.env.EMAIL_USER
                   },
                     to: dem.maildemande,
-                    subject: `Confirmation de l'approbation de votre demande`,
-                    text: `Bonjour ${dem.prenomdemande},
-                    Nous avons le plaisir de vous informer que votre demande a été examinée et approuvée avec succès. Vous pouvez désormais accéder aux fonctionnalités ou services concernés sans restriction.
-
-                    Nous restons à votre disposition pour toute question ou assistance supplémentaire. N'hésitez pas à nous contacter si besoin.
-
-                    Cordialement,
-                    L'équipe Be Mozik
+                    subject: `Approbation de votre demande`,
+                    html: `<p>Bonjour <strong>${dem.prenomdemande}</strong>,</p>
+                    <p>Nous avons le plaisir de vous informer que votre demande a été examinée et approuvée avec succès. Vous pouvez désormais accéder aux fonctionnalités et services concernés sans restriction.</p>
+                    <p>N'hésitez pas à nous contacter si besoin.</p>
+                    <p>Nous restons à votre disposition pour toute question ou assistance supplémentaire.</p>
+                    <p>Cordialement,</p>
+                    <p><strong>L'équipe Be Mozik</strong></p>
                     `
                   };
                   await transporter.sendMail(mailOption, (err, info) => {

@@ -379,6 +379,8 @@ CREATE VIEW public.v_stat_event AS
   GROUP BY b.idevenement, b.idbillet, b.nombillet, devis.nomdevis;
 
 
+SELECT NOW();
+
 
 
 

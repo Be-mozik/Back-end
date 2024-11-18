@@ -5,6 +5,8 @@ const verifyToken = (req, res, next) => {
     if (!token) {
         return res.status(403).send('Token required');
     }
+    console.log(token);
+    
     const tokenParts = token.split(' ');
     if (tokenParts.length !== 2 || tokenParts[0] !== 'Bearer') {
         return res.status(400).send('Token mal formaté');

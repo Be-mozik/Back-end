@@ -186,9 +186,9 @@ class EventController{
                             to: email.mailclient,
                             subject: `Mise à jour de l'événement ${nomevenement}`,
                             html: `
-                                <p>Nous vous informons que l'événement <strong>${nomevenement}</strong> a été modifié. Nous vous invitons à vérifier les nouvelles informations sur notre site.</p>
+                                <p>Nous vous informons que les détails de l'événement <strong>${nomevenement}</strong> ont été mis à jour. Nous vous invitons à consulter les nouvelles informations sur notre site pour ne rien manquer.</p>
                                 <p>Nous nous excusons pour tout inconvénient que cela pourrait causer et restons disponibles pour répondre à toutes vos questions.</p>
-                                <p>Si vous avez besoin de plus d'informations, n'hésitez pas à nous contacter.</p>
+                                <p>N'hésitez pas à nous contacter si vous avez besoin de plus d'informations.</p>
                                 <p>Cordialement,</p>
                                 <p><strong>Équipe Be Mozik</strong></p>
                             `,
@@ -258,9 +258,9 @@ async annulerEvent(req, res) {
                         to: email.mailclient,
                         subject: `Annulation de l'événement ${event.nomevenement}`,
                         html: `
-                        <p>Nous vous informons que l'événement <strong>${event.nomevenement}</strong> a été annulé. Nous nous excusons pour tout inconvénient que cela pourrait causer.</p>
+                        <p>Pour des raisons indépendantes de notre volonté, nous avons le regret de vous informer que l'événement <strong>${event.nomevenement}</strong> est annulé. Nous vous prions de nous excuser pour tout désagrément que cela pourrait occasionner.</p>
                         <p>Si vous avez déjà effectué un achat pour cet événement, veuillez nous contacter pour discuter des possibilités de remboursement.</p>
-                        <p>Si vous avez des questions ou besoin de plus d'informations, n'hésitez pas à nous contacter.</p>
+                        <p>N'hésitez pas à nous contacter si vous avez des questions ou besoin de plus d'informations.</p>
                         <p>Cordialement,</p>
                         <p><strong>Équipe Be Mozik</strong></p>
                     `,
